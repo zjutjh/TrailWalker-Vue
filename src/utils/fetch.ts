@@ -1,31 +1,47 @@
-function postData(url: string, data: any) {
-    // Default options are marked with *
-    return fetch(url, {
-      body: JSON.stringify(data), // must match 'Content-Type' header
-      cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-      credentials: "same-origin", // include, same-origin, *omit
-      headers: {
-        "content-type": "application/json",
-      },
-      method: "POST", // *GET, POST, PUT, DELETE, etc.
-      mode: "cors", // no-cors, cors, *same-origin
-      redirect: "follow", // manual, *follow, error
-      referrer: "no-referrer", // *client, no-referrer
-    })
-    .then((response) => response.json()); // parses response to JSON
-  }
-function getData(url: string, data: any= "") {
-    // Default options are marked with *
-    return fetch(url, {
+import IResponse from "../interface/IResponse";
 
-      cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-      credentials: "same-origin", // include, same-origin, *omit
-
-      method: "GET", // *GET, POST, PUT, DELETE, etc.
-      mode: "cors", // no-cors, cors, *same-origin
-      redirect: "follow", // manual, *follow, error
-      referrer: "no-referrer", // *client, no-referrer
-    })
-    .then((response) => response.json()); // parses response to JSON
+/**
+ *
+ * 用Post发送JSON请求
+ * @param {string} url
+ * @param {*} data
+ * @returns {Promise<IResponse>}
+ */
+async function postData(url: string, data: any = null): Promise<IResponse> {
+    // Default options are marked with *
+    const response = await fetch(url, {
+        body: JSON.stringify(data),
+        cache: "no-cache",
+        credentials: "include",
+        headers: {
+            "content-type": "application/json",
+        },
+        method: "POST",
+        mode: "cors",
+        redirect: "follow",
+        referrer: "no-referrer",
+    });
+    return await response.json(); // parses response to JSON
 }
-export {postData , getData};
+
+/**
+ *
+ * 用Get发送请求
+ * @param {string} url
+ * @param {*} [data=""]
+ * @returns {Promise<IResponse>}
+ */
+async function getData(url: string, data: any = ""): Promise<IResponse> {
+    // Default options are marked with *
+    const response = await fetch(url, {
+        cache: "no-cache",
+        credentials: "include",
+        method: "GET",
+        mode: "cors",
+        redirect: "follow",
+        referrer: "no-referrer",
+    });
+    return await response.json(); // parses response to JSON
+}
+
+export {postData, getData};

@@ -31,5 +31,5 @@ export default {
   data: () => ({
     show: false,
   }),
-}
+};
 </script>

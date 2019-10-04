@@ -55,7 +55,7 @@
   </div>
 </template>
 <script lang="ts">
-import { Component, Provide, Vue, Watch } from "vue-property-decorator";
+import { Component, Vue} from "vue-property-decorator";
 import { getData } from "@/utils/fetch";
 @Component
 export default class Weather extends Vue {
@@ -69,14 +69,18 @@ export default class Weather extends Vue {
   private time = 0;
   private forecast: any = {};
   private current: any = {};
+  private appid = "93424381";
+  private appsecret = "faXxgeq3";
   private created() {
-    getData("https://www.tianqiapi.com/api/", "").then((json) => {
-      this.forecast = json.data.slice(0, 3);
-    });
-    getData("https://www.tianqiapi.com/api/?version=v6", "").then((json) => {
-      this.current = json;
-      this.WeatherImg = "./weather/" + json.wea_img + ".png";
-    });
+    getData("https://www.tianqiapi.com/api/?version=v1&appid=" + this.appid +
+      "&appsecret=" + this.appsecret, "").then((json) => {
+        this.forecast = json.data.slice(0, 3);
+      });
+    getData("https://www.tianqiapi.com/api/?version=v6&appid=" + this.appid +
+      "&appsecret=" + this.appsecret, "").then((json) => {
+        this.current = json;
+        this.WeatherImg = "./weather/" + this.current.wea_img + ".png";
+      });
   }
 }
 </script>

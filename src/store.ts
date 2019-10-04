@@ -4,17 +4,10 @@ import Vuex from "vuex";
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-  state: {
-    currentUser: {
-      id: 0,
-      teamStatus: "no"
+    state: {
+        currentUser: {},
+        isLogin: false
     },
-    session: ""
-  },
-  mutations: {
-
-  },
-  actions: {
-
-  },
+    mutations: {},
+    actions: {},
 });

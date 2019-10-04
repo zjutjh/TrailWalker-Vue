@@ -22,14 +22,14 @@
     <v-layout justify-center style="margin-bottom:1rem;">
       <v-dialog v-model="dialog" persistent max-width="290">
         <template v-slot:activator="{ on }">
-          <v-btn color="primary" v-on="on">同意本声明</v-btn>
+          <v-btn color="primary" @click="showDialog" >{{timeOut}}</v-btn>
         </template>
         <v-card>
           <v-card-title class="headline">是否同意声明</v-card-title>
           <v-card-text>确定你已经阅读该《风险告知与免责声明》并且同意本声明</v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="green darken-1" text @click="dialog = false">不同意</v-btn>
+            <v-btn color="green darken-1" text @click="showDialog">不同意</v-btn>
             <v-btn color="green darken-1" text @click="agree">同意</v-btn>
           </v-card-actions>
         </v-card>
@@ -38,19 +38,37 @@
   </div>
 </template>
 <script lang="ts">
-import { Component, Provide, Vue, Watch, Emit } from "vue-property-decorator";
+import { Component, Vue, Emit } from "vue-property-decorator";
 @Component
 export default class Disclimer extends Vue {
   private dialog = false;
+  private timeOut: string | number = 30;
+
   @Emit()
   private agree() {
     this.dialog = false;
+  }
+
+  private showDialog() {
+    if (this.timeOut === "同意") {
+      this.dialog = true;
+    }
+  }
+
+  private mounted() {
+    (this.timeOut as number)--;
+    const clock = window.setInterval(() => {
+      (this.timeOut as number)--;
+      if (this.timeOut < 0) {     // 当倒计时小于0时清除定时器
+        window.clearInterval(clock);
+        this.timeOut = "同意";
+      }
+    }, 1000);
   }
 }
 </script>
 <style lang="scss" scoped>
 .dis-container {
-  padding-bottom: 1rem;
   display: flex;
   flex-direction: column;
   padding: 1rem 1.2rem;

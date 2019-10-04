@@ -1,13 +1,23 @@
 <template>
-  <div class="flex">
-    <login class="flex-item" v-if="$store.state.currentUser.id==0"></login>
-    <my-info class="flex-item" v-else></my-info>
-  </div>
+    <div class="flex">
+        <transition name="slide-x-transition">
+            <router-view/>
+        </transition>
+    </div>
 </template>
 <script lang="ts">
-import { Component, Provide, Vue, Watch } from "vue-property-decorator";
-import Login from "@/components/Login/Login.vue";
-import MyInfo from "@/components/User/MyInfo.vue";
-@Component({ components: { Login, MyInfo } })
-export default class Team extends Vue { }
+
+
+    import {Component, Vue} from "vue-property-decorator";
+    import MyInfo from "@/components/User/MyInfo.vue";
+    import CreateUser from "@/components/User/CreateUser.vue";
+
+    @Component({components: {MyInfo, CreateUser}})
+    export default class Me extends Vue {
+        private mounted(){
+            if (!this.$store.state.isLogin){
+                this.$router.push('/Me/create');
+            }
+        }
+    }
 </script>
