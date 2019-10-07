@@ -5,7 +5,7 @@
                 :key="index"
                 :value="item.name"
                 @click="tagClicked(item.name)"
-                v-if="item.name!=='Group'||$store.state.isLogin"
+                v-if="!($store.state.isLogin===false&&item.name==='Group')"
         >
             <span>{{item.name}}</span>
             <v-icon>{{item.icon}}</v-icon>

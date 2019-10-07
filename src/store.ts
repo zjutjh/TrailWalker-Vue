@@ -8,6 +8,8 @@ export default new Vuex.Store({
         currentUser: {},
         isLogin: false
     },
-    mutations: {},
+    mutations: {
+
+    },
     actions: {},
 });

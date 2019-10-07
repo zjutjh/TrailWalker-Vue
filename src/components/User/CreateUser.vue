@@ -16,14 +16,22 @@
                                   :rules="idCardRules"></v-text-field>
                     <v-text-field label="手机号" solo clearable v-model="user.phone" :rules="phoneRules"></v-text-field>
                     <v-select
-                            :items="['学生']"
+                            :items="identity"
                             label="身份"
                             solo
                             v-model="user.identity"
                             :rules="[v => !!v || '需要选择身份']"
                     ></v-select>
+                    <v-select
+                            v-if="user.identity==='学生'"
+                            :items="school"
+                            label="学院"
+                            solo
+                            v-model="user.school"
+                            :rules="[v => !!v || '需要选择学院']"
+                    ></v-select>
                     <v-text-field v-if="user.identity==='学生'" label="学号" solo clearable
-                                  v-model="user.sid"></v-text-field>
+                                  v-model="user.sid" :rules="nameRules"></v-text-field>
                     <v-text-field label="  QQ  " solo clearable v-model="user.qq"></v-text-field>
                     <v-text-field label="身高" solo clearable v-model="user.height"></v-text-field>
                     <v-text-field label="邮箱" solo clearable v-model="user.email"></v-text-field>
@@ -65,6 +73,9 @@
 
         private isUpdate = false;
 
+        private school = ["计算机学院"];
+        private identity = ["学生", "校友", "校友", "其他"];
+
         @Inject()
         private showErr!: any;
         private sheet: boolean = false;
@@ -87,9 +98,8 @@
         private createUser() {
             postData(API(apiMap.createUser), this.user)
                 .then((res) => {
-                    if (res.code === 1) {
-                        this.$router.replace("../../Home");
-                    }
+                    this.$router.push("/Home");
+
                 });
         }
 
@@ -97,7 +107,7 @@
             postData(API(apiMap.updateUser), this.user)
                 .then((res) => {
                     if (res.code === 1) {
-                        this.$router.replace("../../Home");
+                        this.$router.replace("/Home");
                     }
                 });
         }
@@ -108,7 +118,7 @@
 
 
         private mounted() {
-            this.isUpdate = this.$store.state.isLogin
+            this.isUpdate = this.$store.state.isLogin;
         }
     }
 </script>

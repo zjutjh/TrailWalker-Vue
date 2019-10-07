@@ -43,7 +43,7 @@
 </template>
 <script lang="ts">
     import {Component, Vue} from "vue-property-decorator";
-    import {postData} from "@/utils/fetch";
+    import {getData} from "@/utils/fetch";
     import {API, apiMap} from "@/utils/api/api";
 
 
@@ -57,7 +57,7 @@
          * 同意入队
          */
         private getInfo() {
-            postData(API(apiMap.systemInfo))
+            getData(API(apiMap.systemInfo))
                 .then((res) => {
                     this.groups = res.data.group_count;
                     this.people = res.data.apply_count;

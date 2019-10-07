@@ -2,10 +2,10 @@
     <div class="flex-item mx-auto" style="max-width:25rem;">
         <h1>信息</h1>
         <v-card class="radius-card" v-if="!$store.state.isLogin">
-            <v-card-title>你还没有登录</v-card-title>
-            <v-card-text>快去登录吧</v-card-text>
+            <v-card-title>你还没有报名</v-card-title>
+            <v-card-text>快去报名吧</v-card-text>
             <v-card-actions>
-                <v-btn text @click="gotoLogin">登录</v-btn>
+                <v-btn text @click="gotoLogin">报名</v-btn>
             </v-card-actions>
         </v-card>
         <v-card class="radius-card" v-else>
@@ -23,7 +23,7 @@
     </div>
 </template>
 <script lang="ts">
-    import {Component, Provide, Vue, Watch, Emit} from "vue-property-decorator";
+    import {Component, Vue} from "vue-property-decorator";
     import router from "@/router";
 
     @Component

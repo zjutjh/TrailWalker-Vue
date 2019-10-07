@@ -6,6 +6,10 @@
                 {{ errText }}
                 <v-btn text @click="errBar = false">Close</v-btn>
             </v-snackbar>
+            <v-snackbar v-model="successBar" color="error" top>
+                {{ successText }}
+                <v-btn text @click="successBar = false">Close</v-btn>
+            </v-snackbar>
             <transition name="slide-x-transition">
                 <router-view/>
             </transition>
@@ -27,7 +31,9 @@
         components: {BottomBar, HeaderBar},
         data: () => ({
             errBar: false,
-            errText: ""
+            errText: "",
+            successBar: false,
+            successText: "",
         }),
         provide() {
             const that = this;
@@ -46,11 +52,11 @@
                 postData(API(apiMap.login), {code: codex}).then((res) => {
                     if (res.code === 1) {
                         // Todo : Do something
-                        this.$store.state.isLogin = true;
+                        this.getMyInfo();
                     }
                 });
             } catch (e) {
-                // window.location.replace(API(apiMap.wxLogin));
+                 window.location.replace(API(apiMap.wxLogin));
             }
         },
         methods: {
@@ -69,6 +75,10 @@
             showErr(text: string) {
                 this.errText = text;
                 this.errBar = true;
+            },
+            showSuccess(text: string) {
+                this.successText = text;
+                this.successBar = true;
             }
         }
 

@@ -1,8 +1,10 @@
 <template>
   <div class="flex">
-    <hello-card></hello-card>
     <my-card></my-card>
-    <!-- <weather class="flex-item"></weather> -->
+<!--    <weather class="flex-item"></weather>-->
+    <hello-card></hello-card>
+
+
   </div>
 </template>
 <script lang="ts">

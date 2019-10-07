@@ -123,35 +123,50 @@
         private knit() {
             postData(API(apiMap.deleteGroupMember))
                 .then((res) => {
-
+                    if (res.code !== 1) {
+                        return;
+                    }
+                    this.$router.push("/Group");
                 });
         }
 
         private breakGroup() {
             postData(API(apiMap.breakGroup))
                 .then((res) => {
-
+                    if (res.code !== 1) {
+                        return;
+                    }
+                    this.$router.push("/Group");
                 });
         }
 
         private unsubmit() {
             postData(API(apiMap.unsubmitGroup))
                 .then((res) => {
-
+                    if (res.code !== 1) {
+                        return;
+                    }
+                    this.$router.push("/Group");
                 });
         }
 
         private submit() {
             postData(API(apiMap.submitGroup))
                 .then((res) => {
-
+                    if (res.code !== 1) {
+                        return;
+                    }
+                    this.$router.push("/Group");
                 });
         }
 
         private leaveGroup() {
             postData(API(apiMap.leaveGroup))
                 .then((res) => {
-
+                    if (res.code !== 1) {
+                        return;
+                    }
+                    this.$router.push("/Group");
                 });
         }
 

@@ -16,7 +16,7 @@
     @Component({components: {GroupList, MyGroup, CreateGroup, ApplyList}})
     export default class Group extends Vue {
         private mounted() {
-            if (this.$store.state.currentUser.state === 1) {
+            if (this.$store.state.currentUser.state <= 1) {
                 this.$router.push("/Group/No");
                 return;
             }

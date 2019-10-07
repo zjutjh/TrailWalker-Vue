@@ -98,7 +98,7 @@
                     if (res.code !== 1) {
                         return;
                     }
-
+                    this.$router.push("/Group");
                     this.applySheet = false;
                 });
 
