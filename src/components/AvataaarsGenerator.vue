@@ -1,7 +1,22 @@
 <template>
     <div class="mx-auto" style="height:100%">
         <v-avatar width="5rem" height="5rem" class="island" style="z-index:99;">
-            <img :src="avax" alt=""/>
+            <v-img
+                    :src="avax"
+                    :lazy-src="`https://picsum.photos/10/6?image=${1 * 5 + 10}`"
+                    aspect-ratio="1"
+            >
+                <template v-slot:placeholder>
+                    <v-row
+                            class="fill-height ma-0"
+                            align="center"
+                            justify="center"
+                    >
+                        <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
+                    </v-row>
+                </template>
+            </v-img>
+
         </v-avatar>
         <v-card class="scroll drop" style="padding-top:2rem;border-radius: 30px 30px 0 0;height:100%;">
             <v-card-text>
@@ -43,7 +58,7 @@
         private eyeType = ["Close", "Cry", "Default", "Dizzy", "EyeRoll", "Happy", "Hearts",
             "Side", "Squint", "Surprised", "Wink", "WinkWacky"];
         private skin = ["Tanned", "Yellow", "Pale", "Light", "Brown", "DarkBrown", "Black"];
-        private mouthType = ["Tanned", "Yellow", "Pale", "Light", "Brown", "DarkBrown", "Black"];
+        private mouthType = ["Concerned", "Default", "Disbelief", "Eating", "Grimace", "Sad", "ScreamOpen", "Serious", "Smile", "Tongue", "Twinkle", "Vomit"];
         private eyebrowType = ["Angry", "AngryNatural", "Default", "DefaultNatural",
             "FlatNatural", "RaisedExcited", "RaisedExcitedNatural", "SadConcerned", "SadConcernedNatural",
             "UnibrowNatural", "UpDown", "UpDownNatural"];
@@ -95,7 +110,7 @@ https://avataaars.io/?avatarStyle=${this.axa[0]}
     .island {
         margin-left: auto;
         margin-right: auto;
-        margin-top: -8%;
+        margin-top: -5%;
         position: absolute;
         left: 0;
         right: 0;

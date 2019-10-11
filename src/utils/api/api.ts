@@ -8,7 +8,7 @@ enum apiMap {
     systemInfo = "/index/info",
 
     wxLogin = "/oauth",
-    login= "/wx/login",
+    login = "/wx/login",
     getUserInfo = "/user/info",
     createUser = "/user/register",
     updateUser = "/user/update",
@@ -33,7 +33,9 @@ enum apiMap {
     agreeApply = "/apply/agree",
     refuseApply = "/apply/refuse",
 
-  }
+    listRoutes = "/route/list"
+
+}
 
 /**
  * get API url by API name
@@ -43,4 +45,5 @@ function API(name: apiMap): string {
     const prefix = env === "development" ? `${devUrl}` : serverUrl;
     return `${prefix}${name}`;
 }
+
 export {API, apiMap};

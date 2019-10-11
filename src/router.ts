@@ -16,6 +16,20 @@ export default new Router({
             component: Home
         },
         {
+            path: "/Dis",
+            alias: "/",
+            name: "Dis",
+            // tslint:disable-next-line: trailing-comma
+            component: () => import(/* webpackChunkName: "about" */ "./views/Dc.vue"),
+        },
+        {
+            path: "/End",
+            alias: "/",
+            name: "End",
+            // tslint:disable-next-line: trailing-comma
+            component: () => import(/* webpackChunkName: "about" */ "./views/End.vue"),
+        },
+        {
             path: "/Group",
             name: "Group",
             // route level code-splitting

@@ -3,6 +3,6 @@ export default interface IGroup {
     name: string;
     logo?: string;
     description: string;
-    route: "屏峰小和山半程毅行"| "屏峰小和山全程毅行"|"朝晖京杭大运河毅行";
+    route_id: number;
     capacity: 4|5|6;
 }

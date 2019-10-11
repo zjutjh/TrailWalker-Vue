@@ -1,31 +1,52 @@
 <template>
-    <div v-if="group" class="mx-auto" style="max-width:30rem;">
+    <div v-if="$store.state.currentGroup" class="mx-auto" style="max-width:30rem;">
         <h1>我的队伍</h1>
         <v-card class="radius-card text-center">
             <v-card-title>
                 <div style="margin-left:auto;margin-right:auto;">
-                    <v-avatar v-if="group" width="5rem" height="5rem">
-                        <img :src="group.logo" alt=""/>
+                    <v-avatar v-if="$store.state.currentGroup" width="5rem" height="5rem">
+                        <v-img
+                                :src="$store.state.currentGroup.logo" alt=""
+                                :lazy-src="`https://picsum.photos/10/6?image=${1 * 5 + 10}`"
+                                aspect-ratio="1"
+                        >
+                            <template v-slot:placeholder>
+                                <v-row
+                                        class="fill-height ma-0"
+                                        align="center"
+                                        justify="center"
+                                >
+                                    <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
+                                </v-row>
+                            </template>
+                        </v-img>
                     </v-avatar>
                 </div>
             </v-card-title>
             <v-card-text>
+                <v-list-item two-line v-if="$store.state.currentGroup.No">
+                    <v-list-item-content>
+                        <v-list-item-title>队伍编号</v-list-item-title>
+                        <v-list-item-subtitle>{{$store.state.currentGroup.No}}</v-list-item-subtitle>
+                    </v-list-item-content>
+                </v-list-item>
                 <v-list-item two-line>
                     <v-list-item-content>
                         <v-list-item-title>队伍名称</v-list-item-title>
-                        <v-list-item-subtitle>{{group.name}}</v-list-item-subtitle>
+                        <v-list-item-subtitle>{{$store.state.currentGroup.name}}</v-list-item-subtitle>
                     </v-list-item-content>
                 </v-list-item>
+
                 <v-list-item>
                     <v-list-item-content>
                         <v-list-item-title>队伍口号</v-list-item-title>
-                        <v-list-item-subtitle>{{group.description}}</v-list-item-subtitle>
+                        <v-list-item-subtitle>{{$store.state.currentGroup.description}}</v-list-item-subtitle>
                     </v-list-item-content>
                 </v-list-item>
                 <v-list-item>
                     <v-list-item-content>
                         <v-list-item-title>队伍路线</v-list-item-title>
-                        <v-list-item-subtitle>{{group.route}}</v-list-item-subtitle>
+                        <v-list-item-subtitle>{{$store.state.currentGroup.route}}</v-list-item-subtitle>
                     </v-list-item-content>
                 </v-list-item>
                 <v-list-item>
@@ -37,11 +58,11 @@
                     <v-flex>
                         <v-chip
                                 link
-                                :close="group.captain_id===$store.state.currentUser.id&&mate.id!==group.captain_id"
+                                :close="$store.state.currentGroup.captain_id===$store.state.currentUser.id&&mate.id!==$store.state.currentGroup.captain_id"
                                 v-for="(mate, ix) in groupMates"
                                 :key="ix"
                                 @click="chipClick(mate)"
-                                @close="alert(1)"
+                                @close="knit(mate)"
                         >
                             <v-avatar style="margin-left: -0.5rem">
                                 <v-img :src="mate.logo"></v-img>
@@ -51,11 +72,11 @@
                     </v-flex>
                 </v-layout>
             </v-card-text>
-            <v-card-actions style="display:block;">
-                <div v-if="group.captain_id===$store.state.currentUser.id" style="margin:1rem;">
-                    <v-btn color="error" v-if="group.is_submit" @click="unsubmit">取消报名</v-btn>
+            <v-card-actions v-if="!isEnd" style="display:block;">
+                <div v-if="$store.state.currentGroup.captain_id===$store.state.currentUser.id" style="margin:1rem;">
+                    <v-btn color="error" v-if="$store.state.currentGroup.is_submit===1" @click="unsubmit">取消报名</v-btn>
                     <v-btn color="error" v-else @click="submit">报名</v-btn>
-                    <v-btn color="error" v-if="!group.is_submit" @click="breakGroup">解散</v-btn>
+                    <v-btn color="error" v-if="$store.state.currentGroup.is_submit!==1" @click="breakGroup">解散</v-btn>
                     <v-btn color="error" @click="$router.push('/Group/Update')">修改</v-btn>
                 </div>
                 <div v-else>
@@ -65,7 +86,7 @@
         </v-card>
         <div>
             <v-bottom-sheet v-model="MemberSheet">
-                <v-sheet class="bottom-sheet" v-if="selectedMember != null">
+                <v-sheet class="bottom-sheet" v-if="selectedMember">
                     <div class="text-center drop" style="padding:1rem;">
                         <v-avatar class="text-center">
                             <v-img :src="selectedMember.logo"></v-img>
@@ -75,7 +96,8 @@
                         <h2>邮箱 {{selectedMember.email}}</h2>
                         <h2>QQ {{selectedMember.qq}}</h2>
                         <h2>微信 {{selectedMember.wx_id}}</h2>
-                        <div class="text-center" style="margin:1rem;" v-if="selectedMember.id!==group.captain_id">
+                        <div class="text-center" style="margin:1rem;"
+                             v-if="selectedMember.id!==$store.state.currentGroup.captain_id">
                             <v-btn @click="knit">踢出</v-btn>
                         </div>
                     </div>
@@ -86,7 +108,7 @@
     </div>
 </template>
 <script lang="ts">
-    import {Component, Vue, Inject} from "vue-property-decorator";
+    import {Component, Vue, Prop} from "vue-property-decorator";
     import {API, apiMap} from "@/utils/api/api";
 
     import {postData} from "@/utils/fetch";
@@ -95,22 +117,20 @@
 
     @Component({components: {}})
     export default class MyGroup extends Vue {
-        @Inject()
-        private showErr!: any;
-        private group: IGroup | null = null;
+
+        @Prop({
+            type: Boolean,
+            default: false
+        })
+        private isEnd?: boolean;
+
         private groupMates = {};
-
         private MemberSheet = false;
-        private selectedMember?: IUser;
+        private selectedMember: IUser | null = null;
 
-        private getMyGroup() {
-            postData(API(apiMap.getMyGroupInfo))
-                .then((res) => {
-                    this.group = res.data as IGroup;
-                    if (this.group) {
-                        this.getMyMates();
-                    }
-                });
+        private async getMyGroup() {
+            await this.$store.dispatch("getMyGroup");
+            this.getMyMates();
         }
 
         private getMyMates() {
@@ -120,23 +140,39 @@
                 });
         }
 
-        private knit() {
-            postData(API(apiMap.deleteGroupMember))
+        private knit(user: IUser) {
+            postData(API(apiMap.deleteGroupMember), {user_id: user.id})
                 .then((res) => {
-                    if (res.code !== 1) {
-                        return;
+                    if (res.code === 1) {
+                        this.getMyGroup();
+
+                        this.$router.push("/Group");
+                    } else {
+                        this.$notify({
+                            group: "foo",
+                            title: "Fail",
+                            text: res.data
+                        });
                     }
-                    this.$router.push("/Group");
+
                 });
         }
 
         private breakGroup() {
             postData(API(apiMap.breakGroup))
-                .then((res) => {
+                .then(async (res) => {
                     if (res.code !== 1) {
+                        this.$notify({
+                            group: "foo",
+                            title: "Fail",
+                            text: res.data
+                        });
                         return;
                     }
-                    this.$router.push("/Group");
+
+                    await this.getMyGroup();
+
+                    await this.$router.push("/Group/No");
                 });
         }
 
@@ -144,8 +180,14 @@
             postData(API(apiMap.unsubmitGroup))
                 .then((res) => {
                     if (res.code !== 1) {
+                        this.$notify({
+                            group: "foo",
+                            title: "Fail",
+                            text: res.data
+                        });
                         return;
                     }
+                    this.getMyGroup();
                     this.$router.push("/Group");
                 });
         }
@@ -154,24 +196,38 @@
             postData(API(apiMap.submitGroup))
                 .then((res) => {
                     if (res.code !== 1) {
+                        this.$notify({
+                            group: "foo",
+                            title: "Fail",
+                            text: res.data
+                        });
                         return;
                     }
+                    this.getMyGroup();
                     this.$router.push("/Group");
                 });
         }
 
         private leaveGroup() {
             postData(API(apiMap.leaveGroup))
-                .then((res) => {
+                .then(async (res) => {
                     if (res.code !== 1) {
+                        this.$notify({
+                            group: "foo",
+                            title: "Fail",
+                            text: res.data
+                        });
                         return;
                     }
-                    this.$router.push("/Group");
+
+                    await this.getMyGroup();
+                    await this.$router.push("/Group/No");
                 });
         }
 
         private mounted() {
             this.getMyGroup();
+
         }
 
         private chipClick(mate: IUser) {

@@ -1,3 +1,4 @@
+import {apiMap} from "@/utils/api/api";
 <template>
     <div class="mx-auto" style="max-width:30rem;">
         <h1 v-if="!isUpdate">创建队伍</h1>
@@ -5,7 +6,22 @@
         <v-card class="radius-card">
             <v-card-title style="display:block;">
                 <v-avatar width="5rem" height="5rem" style="margin-bottom:2rem" @click="AvataaarsSheet=true">
-                    <img v-if="group.logo" :src="group.logo" alt="logo of a group"/>
+
+                    <v-img v-if="group.logo"
+                           :src="group.logo" alt="logo of a group"
+                           :lazy-src="`https://picsum.photos/10/6?image=${1 * 5 + 10}`"
+                           aspect-ratio="1"
+                    >
+                        <template v-slot:placeholder>
+                            <v-row
+                                    class="fill-height ma-0"
+                                    align="center"
+                                    justify="center"
+                            >
+                                <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
+                            </v-row>
+                        </template>
+                    </v-img>
                 </v-avatar>
             </v-card-title>
             <v-card-text>
@@ -14,12 +30,12 @@
                     <v-text-field label="队伍口号" solo clearable v-model="group.description"
                                   :rules="nameRules"></v-text-field>
                     <v-select
-                            :items="['屏峰小和山半程毅行', '屏峰小和山全程毅行', '朝晖京杭大运河毅行']"
+                            :items="$store.state.routes!==[]&&$store.state.routes!=={}?$store.state.routes:['屏峰小和山半程毅行', '屏峰小和山全程毅行', '朝晖京杭大运河毅行']"
                             item-text="name"
                             item-value="id"
                             label="线路"
                             solo
-                            v-model="group.route"
+                            v-model="group.route_id"
                             :rules="[v => !!v || '需要选择路线']"
                     ></v-select>
                     <v-slider
@@ -33,8 +49,8 @@
                     ></v-slider>
                 </v-form>
                 <div class="text-center">
-                    <v-btn v-if="!isUpdate" :disabled="!valid" @click="createGroup">创建并报名</v-btn>
-                    <v-btn v-else :disabled="!valid" @click="updateGroup">修改</v-btn>
+                    <v-btn v-if="!isUpdate" :disabled="!valid" @click="createUpdateGroup">创建并报名</v-btn>
+                    <v-btn v-else :disabled="!valid" @click="createUpdateGroup">修改</v-btn>
                 </div>
             </v-card-text>
         </v-card>
@@ -48,10 +64,10 @@
     </div>
 </template>
 <script lang="ts">
-    import {nameRules, phoneRules, idCardRules} from "@/utils/rule/rules";
+    import {nameRules} from "@/utils/rule/rules";
     import router from "@/router";
-    import Disclaimer from "@/components/Disclimer.vue";
-    import {Component, Vue, Inject, Prop} from "vue-property-decorator";
+    import Disclaimer from "@/components/Disclaimer.vue";
+    import {Component, Prop, Vue} from "vue-property-decorator";
 
     import {API, apiMap} from "@/utils/api/api";
     import {postData} from "@/utils/fetch";
@@ -60,55 +76,50 @@
 
     @Component({components: {Disclaimer, AvataaarsGenerator}})
     export default class CreateGroup extends Vue {
-        @Inject()
-        private showErr!: any;
 
         private AvataaarsSheet: boolean = false;
-        private idCardRules = idCardRules;
-        private phoneRules = phoneRules;
+
         private nameRules = nameRules;
+
         private group: IGroup = {
             name: "",
             logo: "",
             id: 0,
             description: "",
-            route: "朝晖京杭大运河毅行",
+            route_id: 0,
             capacity: 4
         };
+
         private valid: boolean = false;
 
         @Prop({
             type: Boolean,
             default: false
         })
-        private isUpdate?: Boolean;
+        private isUpdate?: boolean;
 
-        private createGroup() {
-            postData(API(apiMap.createGroup), this.group)
-                .then((res: any) => {
-                    router.replace("/Group");
-                });
-
-        }
-
-        private updateGroup() {
-            postData(API(apiMap.updateGroup), this.group)
-                .then((res: any) => {
-                    router.push("/Group");
-                });
-
-        }
-
-        private getMyGroup() {
-            postData(API(apiMap.getMyGroupInfo))
+        private createUpdateGroup() {
+            const api = this.isUpdate ? apiMap.updateGroup : apiMap.createGroup;
+            postData(API(api), this.group)
                 .then((res) => {
-                    this.group = res.data as IGroup;
+                    if (res.code === 1) {
+                        this.$store.dispatch("getMyInfo");
+                        router.replace("/Group");
+                    } else {
+                        this.$notify({
+                            group: "foo",
+                            title: "Fail",
+                            text: res.data
+                        });
+                    }
                 });
         }
 
         private mounted() {
+            this.$store.dispatch("getRoutesInfo");
             if (this.isUpdate) {
-                this.getMyGroup();
+                this.$store.dispatch("getMyGroup");
+                this.group = this.$store.state.currentGroup;
             }
         }
     }

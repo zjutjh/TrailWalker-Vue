@@ -1,7 +1,7 @@
 <template>
     <div class="flex-item mx-auto" style="max-width:30rem;">
         <h1>报名</h1>
-        <v-card class="radius-card text-center">
+        <v-card class="text-center">
 
             <v-card-title style="display:block;">
                 <v-avatar width="5rem" height="5rem" style="margin-bottom:2rem" @click="showAVE">
@@ -12,8 +12,8 @@
                 <v-form ref="form" v-model="valid">
                     <v-text-field label="姓名" solo clearable v-model="user.name" :rules="nameRules"></v-text-field>
                     <v-text-field label="身份证" solo clearable v-model="user.id_card" :rules="idCardRules"></v-text-field>
-                    <v-text-field label="重复身份证" solo clearable v-model="user.id_card"
-                                  :rules="idCardRules"></v-text-field>
+                    <v-text-field label="重复身份证" solo clearable v-model="idCard2"
+                                  :rules="[v => !!v&&user.id_card===idCard2 || '身份证不匹配']"></v-text-field>
                     <v-text-field label="手机号" solo clearable v-model="user.phone" :rules="phoneRules"></v-text-field>
                     <v-select
                             :items="identity"
@@ -30,11 +30,19 @@
                             v-model="user.school"
                             :rules="[v => !!v || '需要选择学院']"
                     ></v-select>
-                    <v-text-field v-if="user.identity==='学生'" label="学号" solo clearable
-                                  v-model="user.sid" :rules="nameRules"></v-text-field>
+                    <v-text-field label="学号" solo clearable v-if="user.identity==='学生'"
+                                  v-model="user.sid" :rules="sidRules"></v-text-field>
+                    <v-select
+                            v-if="user.identity==='学生'"
+                            :items="campus"
+                            label="校区"
+                            solo
+                            v-model="user.campus"
+                            :rules="[v => !!v || '需要选择校区']"
+                    ></v-select>
                     <v-text-field label="  QQ  " solo clearable v-model="user.qq"></v-text-field>
                     <v-text-field label="身高" solo clearable v-model="user.height"></v-text-field>
-                    <v-text-field label="邮箱" solo clearable v-model="user.email"></v-text-field>
+                    <v-text-field label="邮箱" solo clearable v-model="user.email" :rules="mailRules"></v-text-field>
                     <v-text-field label="微信号" solo clearable v-model="user.wx_id"></v-text-field>
 
                 </v-form>
@@ -60,9 +68,9 @@
 
 </template>
 <script lang="ts">
-    import {idCardRules, phoneRules, nameRules} from "@/utils/rule/rules";
-    import {Component, Vue, Inject} from "vue-property-decorator";
-    import Disclaimer from "@/components/Disclimer.vue";
+    import {idCardRules, phoneRules, nameRules, sidRules, emailRules} from "@/utils/rule/rules";
+    import {Component, Vue} from "vue-property-decorator";
+    import Disclaimer from "@/components/Disclaimer.vue";
     import AvataaarsGenerator from "@/components/AvataaarsGenerator.vue";
 
     import {API, apiMap} from "@/utils/api/api";
@@ -74,18 +82,22 @@
         private isUpdate = false;
 
         private school = ["计算机学院"];
-        private identity = ["学生", "校友", "校友", "其他"];
+        private identity = ["学生", "教职工", "校友", "其他"];
+        private campus = ["屏峰", "朝晖"];
 
-        @Inject()
-        private showErr!: any;
         private sheet: boolean = false;
         private sheet2: boolean = false;
+
         private idCardRules = idCardRules;
         private phoneRules = phoneRules;
         private nameRules = nameRules;
-        private user: any = this.$store.state.currentUser;
+        private sidRules = sidRules;
+        private mailRules = emailRules;
 
+        private user: any = {};
         private valid: boolean = false;
+
+        private idCard2 = "";
 
         private createOrUpdate() {
             if (this.isUpdate) {
@@ -98,7 +110,16 @@
         private createUser() {
             postData(API(apiMap.createUser), this.user)
                 .then((res) => {
-                    this.$router.push("/Home");
+                    if (res.code === 1) {
+                        this.$router.push("/Home");
+                        this.$store.dispatch("getMyInfo");
+                    } else {
+                        this.$notify({
+                            group: "foo",
+                            title: "Fail",
+                            text: res.data
+                        });
+                    }
 
                 });
         }
@@ -108,6 +129,13 @@
                 .then((res) => {
                     if (res.code === 1) {
                         this.$router.replace("/Home");
+                        this.$store.dispatch("getMyInfo");
+                    } else {
+                        this.$notify({
+                            group: "foo",
+                            title: "Fail",
+                            text: res.data
+                        });
                     }
                 });
         }
@@ -119,6 +147,9 @@
 
         private mounted() {
             this.isUpdate = this.$store.state.isLogin;
+            if (this.isUpdate) {
+                this.user = this.$store.state.currentUser;
+            }
         }
     }
 </script>

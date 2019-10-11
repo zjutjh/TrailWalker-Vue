@@ -2,19 +2,12 @@
     <v-app>
         <header-bar></header-bar>
         <v-content class="content">
-            <v-snackbar v-model="errBar" color="error" top>
-                {{ errText }}
-                <v-btn text @click="errBar = false">Close</v-btn>
-            </v-snackbar>
-            <v-snackbar v-model="successBar" color="error" top>
-                {{ successText }}
-                <v-btn text @click="successBar = false">Close</v-btn>
-            </v-snackbar>
+            <notifications group="foo" position="top center"/>
             <transition name="slide-x-transition">
                 <router-view/>
             </transition>
         </v-content>
-        <bottom-bar></bottom-bar>
+        <bottom-bar v-if="$store.state.systemInfo.state === 1"></bottom-bar>
     </v-app>
 </template>
 
@@ -29,56 +22,31 @@
     export default Vue.extend({
         name: "App",
         components: {BottomBar, HeaderBar},
-        data: () => ({
-            errBar: false,
-            errText: "",
-            successBar: false,
-            successText: "",
-        }),
-        provide() {
-            const that = this;
-            return {
-                showErr(text: string) {
-                    that.errText = text;
-                    that.errBar = true;
-                }
-            };
-        },
-        created() {
-            this.getMyInfo();
+        async created() {
+            await this.$store.dispatch("getSystemInfo");
+            await this.$store.dispatch("getMyInfo");
+
+            if (this.$store.state.systemInfo.state < 1) {
+                await this.$router.push("/End");
+            }
+
             const search = window.location.search;
             try {
                 const codex = search.split("?")[1].split("&")[0].split("=")[1];
                 postData(API(apiMap.login), {code: codex}).then((res) => {
                     if (res.code === 1) {
-                        // Todo : Do something
-                        this.getMyInfo();
+                        this.$store.dispatch("getMyInfo");
+                        this.$notify({
+                            group: "foo",
+                            title: "Success",
+                            text: "微信登录成功"
+                        });
+                    } else {
+                        //window.location.replace(API(apiMap.wxLogin));
                     }
                 });
             } catch (e) {
-                 window.location.replace(API(apiMap.wxLogin));
-            }
-        },
-        methods: {
-            getMyInfo() {
-                postData(API(apiMap.getUserInfo), null)
-                    .then((res) => {
-                        if (res.code === 1) {
-                            this.$store.state.currentUser = res.data as IUser;
-                            this.$store.state.isLogin = true;
-                        } else {
-                            this.$store.state.isLogin = false;
-                        }
-
-                    });
-            },
-            showErr(text: string) {
-                this.errText = text;
-                this.errBar = true;
-            },
-            showSuccess(text: string) {
-                this.successText = text;
-                this.successBar = true;
+                //window.location.replace(API(apiMap.wxLogin));
             }
         }
 

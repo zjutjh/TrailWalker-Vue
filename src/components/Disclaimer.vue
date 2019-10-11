@@ -40,9 +40,9 @@
 <script lang="ts">
 import { Component, Vue, Emit } from "vue-property-decorator";
 @Component
-export default class Disclimer extends Vue {
+export default class Disclaimer extends Vue {
   private dialog = false;
-  private timeOut: string | number = 30;
+  private timeOut: string | number = 15;
 
   @Emit()
   private agree() {
@@ -84,7 +84,7 @@ export default class Disclimer extends Vue {
       background-size: cover;
       margin: 0 auto;
       font-weight: bold;
-      font-size: 2.4rem;
+      font-size: 2rem;
       color: #877878;
     }
   }

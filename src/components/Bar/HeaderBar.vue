@@ -9,10 +9,6 @@
         <span class="mr-2">广告位招租</span>
         <v-icon>mdi-open-in-new</v-icon>
       </v-btn>
-      <v-btn text href="https://github.com/vuetifyjs/vuetify/releases/latest" target="_blank">
-        <span class="mr-2">广告位招租</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
     </v-app-bar>
 </template>
 <script lang="ts">

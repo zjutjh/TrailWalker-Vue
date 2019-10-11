@@ -58,8 +58,7 @@
 
     @Component
     export default class ApplyList extends Vue {
-        @Inject()
-        private showErr!: any;
+
 
         private listRequest: IListRequest = {page: 1, page_size: 0};
         private applyUsers: any = {
@@ -75,47 +74,54 @@
         }
 
         /**
-         *
          * 获得队伍申请列表
          */
         private getApplyUserList() {
             postData(API(apiMap.listApply), this.listRequest)
                 .then((res) => {
-                    if (res.code !== 1) {
-                        return;
+                    if (res.code === 1) {
+                        this.confirmSheet = false;
+                        this.applyUsers = res.data;
                     }
-                    this.confirmSheet = false;
-                    this.applyUsers = res.data;
                 });
         }
 
         /**
-         *
          * 同意入队
          */
         private approve() {
             postData(API(apiMap.agreeApply), {apply_id: (this.selectedUser as IUser).id})
                 .then((res) => {
-                    if (res.code !== 1) {
-                        return;
+                    if (res.code === 1) {
+                        this.confirmSheet = false;
+                        this.getApplyUserList();
+                    } else {
+                        this.$notify({
+                            group: "foo",
+                            title: "Fail",
+                            text: "操作失败"
+                        });
                     }
-                    this.confirmSheet = false;
-                    this.getApplyUserList();
+
                 });
         }
 
         /**
-         *
          * 拒绝入队
          */
         private refuse() {
             postData(API(apiMap.refuseApply), {apply_id: (this.selectedUser as IUser).id})
                 .then((res) => {
-                    if (res.code !== 1) {
-                        return;
+                    if (res.code === 1) {
+                        this.confirmSheet = false;
+                        this.getApplyUserList();
+                    } else {
+                        this.$notify({
+                            group: "foo",
+                            title: "Fail",
+                            text: "操作失败"
+                        });
                     }
-                    this.confirmSheet = false;
-                    this.getApplyUserList();
                 });
         }
 

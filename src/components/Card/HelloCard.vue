@@ -52,10 +52,6 @@
         private groups = 0;
         private people = 0;
 
-        /**
-         *
-         * 同意入队
-         */
         private getInfo() {
             getData(API(apiMap.systemInfo))
                 .then((res) => {
