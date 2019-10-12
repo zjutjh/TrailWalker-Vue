@@ -1,7 +1,7 @@
 <template>
     <div class="flex">
         <my-card></my-card>
-        <!--    <weather class="flex-item"></weather>-->
+<!--            <weather class="flex-item"></weather>-->
         <tip-card></tip-card>
         <hello-card></hello-card>
 
@@ -17,5 +17,8 @@
 
     @Component({components: {Weather, MyCard, HelloCard, TipCard}})
     export default class Home extends Vue {
+        private async mounted() {
+            await this.$store.dispatch("getMyInfo");
+        }
     }
 </script>

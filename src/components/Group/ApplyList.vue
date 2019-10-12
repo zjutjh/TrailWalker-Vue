@@ -1,7 +1,7 @@
 <template>
     <div v-if="applyUsers.length>0" class="mx-auto" style="max-width:30rem;">
         <h1>申请列表</h1>
-        <v-card class="radius-card">
+        <v-card >
             <v-list two-line>
                 <template v-for="(item, i) in applyUsers">
                     <v-divider v-if="i!==0" :key="i"></v-divider>
@@ -27,6 +27,8 @@
                     v-model="listRequest.page"
                     :length="applyUsers.last_page"
                     :total-visible="5"
+                    @next="getApplyUserList"
+                    @previous="getApplyUserList"
             ></v-pagination>
         </div>
         <div>
@@ -49,7 +51,7 @@
     </div>
 </template>
 <script lang="ts">
-    import {Component, Vue, Inject} from "vue-property-decorator";
+    import {Component, Vue} from "vue-property-decorator";
     import {postData} from "@/utils/fetch";
     import {API, apiMap} from "@/utils/api/api";
 
@@ -76,53 +78,49 @@
         /**
          * 获得队伍申请列表
          */
-        private getApplyUserList() {
-            postData(API(apiMap.listApply), this.listRequest)
-                .then((res) => {
-                    if (res.code === 1) {
-                        this.confirmSheet = false;
-                        this.applyUsers = res.data;
-                    }
-                });
+        private async getApplyUserList() {
+            const res = await postData(API(apiMap.listApply), this.listRequest);
+
+            if (res.code === 1) {
+                this.confirmSheet = false;
+                this.applyUsers = res.data;
+            }
         }
 
         /**
          * 同意入队
          */
-        private approve() {
-            postData(API(apiMap.agreeApply), {apply_id: (this.selectedUser as IUser).id})
-                .then((res) => {
-                    if (res.code === 1) {
-                        this.confirmSheet = false;
-                        this.getApplyUserList();
-                    } else {
-                        this.$notify({
-                            group: "foo",
-                            title: "Fail",
-                            text: "操作失败"
-                        });
-                    }
+        private async approve() {
+            this.$store.commit("setLoading", true);
+            const res = await postData(API(apiMap.agreeApply), {apply_id: (this.selectedUser as IUser).id});
+            this.$store.commit("setLoading", false);
 
-                });
+            if (res.code === 1) {
+                this.confirmSheet = false;
+                this.$store.commit("showSuccessbar", "操作成功");
+            } else {
+                this.$store.commit("showErrorbar", res.data);
+            }
+
+            await this.getApplyUserList();
         }
 
         /**
          * 拒绝入队
          */
-        private refuse() {
-            postData(API(apiMap.refuseApply), {apply_id: (this.selectedUser as IUser).id})
-                .then((res) => {
-                    if (res.code === 1) {
-                        this.confirmSheet = false;
-                        this.getApplyUserList();
-                    } else {
-                        this.$notify({
-                            group: "foo",
-                            title: "Fail",
-                            text: "操作失败"
-                        });
-                    }
-                });
+        private async refuse() {
+            this.$store.commit("setLoading", true);
+            const res = await postData(API(apiMap.refuseApply), {apply_id: (this.selectedUser as IUser).id});
+            this.$store.commit("setLoading", false);
+
+            if (res.code === 1) {
+                this.confirmSheet = false;
+                this.$store.commit("showSuccessbar", "操作成功");
+            } else {
+                this.$store.commit("showErrorbar", res.data);
+            }
+
+            await this.getApplyUserList();
         }
 
         private mounted() {

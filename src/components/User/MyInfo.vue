@@ -7,15 +7,11 @@
                     <v-avatar width="5rem" height="5rem">
                         <v-img
                                 :src="$store.state.currentUser.logo"
-                                :lazy-src="`https://picsum.photos/10/6?image=${1 * 5 + 10}`"
+                                :lazy-src="`https://picsum.photos/10/6?image=15`"
                                 aspect-ratio="1"
                         >
                             <template v-slot:placeholder>
-                                <v-row
-                                        class="fill-height ma-0"
-                                        align="center"
-                                        justify="center"
-                                >
+                                <v-row class="fill-height ma-0" align="center" justify="center">
                                     <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
                                 </v-row>
                             </template>

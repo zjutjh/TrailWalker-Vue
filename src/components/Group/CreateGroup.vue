@@ -3,13 +3,13 @@ import {apiMap} from "@/utils/api/api";
     <div class="mx-auto" style="max-width:30rem;">
         <h1 v-if="!isUpdate">创建队伍</h1>
         <h1 v-else>修改队伍</h1>
-        <v-card class="radius-card">
+        <v-card>
             <v-card-title style="display:block;">
                 <v-avatar width="5rem" height="5rem" style="margin-bottom:2rem" @click="AvataaarsSheet=true">
 
                     <v-img v-if="group.logo"
                            :src="group.logo" alt="logo of a group"
-                           :lazy-src="`https://picsum.photos/10/6?image=${1 * 5 + 10}`"
+                           :lazy-src="`https://picsum.photos/10/6?image=15`"
                            aspect-ratio="1"
                     >
                         <template v-slot:placeholder>
@@ -98,21 +98,24 @@ import {apiMap} from "@/utils/api/api";
         })
         private isUpdate?: boolean;
 
-        private createUpdateGroup() {
+        private async createUpdateGroup() {
             const api = this.isUpdate ? apiMap.updateGroup : apiMap.createGroup;
-            postData(API(api), this.group)
-                .then((res) => {
-                    if (res.code === 1) {
-                        this.$store.dispatch("getMyInfo");
-                        router.replace("/Group");
-                    } else {
-                        this.$notify({
-                            group: "foo",
-                            title: "Fail",
-                            text: res.data
-                        });
-                    }
-                });
+            this.$store.commit("setLoading", true);
+            const res = await postData(API(api), this.group);
+            this.$store.commit("setLoading", false);
+
+            if (res.code === 1) {
+                await this.$store.dispatch("getMyInfo");
+                await router.replace("/Group");
+                if (this.isUpdate) {
+                    this.$store.commit("showSuccessbar", "修改成功");
+                } else {
+                    this.$store.commit("showSuccessbar", "创建成功");
+                }
+            } else {
+                this.$store.commit("showErrorbar", res.data);
+            }
+
         }
 
         private mounted() {

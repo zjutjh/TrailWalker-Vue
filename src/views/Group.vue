@@ -15,15 +15,14 @@
 
     @Component({components: {GroupList, MyGroup, CreateGroup, ApplyList}})
     export default class Group extends Vue {
-        private mounted() {
-            this.$store.dispatch("getMyInfo");
+        private async mounted() {
+            await this.$store.dispatch("getMyInfo");
+            await this.$store.dispatch("getMyGroup");
             if (this.$store.state.currentUser.state <= 1) {
-                this.$router.push("/Group/No");
-                return;
+                await this.$router.push("/Group/No");
             }
             if (this.$store.state.currentUser.state === 2) {
-                this.$router.push("/Group/Wait");
-                return;
+                await this.$router.push("/Group/Wait");
             }
         }
     }

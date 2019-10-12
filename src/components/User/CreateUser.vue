@@ -41,7 +41,8 @@
                             :rules="[v => !!v || '需要选择校区']"
                     ></v-select>
                     <v-text-field label="  QQ  " solo clearable v-model="user.qq"></v-text-field>
-                    <v-text-field label="身高" solo clearable v-model="user.height"></v-text-field>
+                    <v-text-field label="身高" solo clearable v-model="user.height"
+                                  :rules="[v => !!v&&v<300&&v>50 || '请输入正确的身高']"></v-text-field>
                     <v-text-field label="邮箱" solo clearable v-model="user.email" :rules="mailRules"></v-text-field>
                     <v-text-field label="微信号" solo clearable v-model="user.wx_id"></v-text-field>
 
@@ -81,7 +82,29 @@
 
         private isUpdate = false;
 
-        private school = ["计算机学院"];
+        private school = ["化学工程学院",
+            "药学院、协同创新中心",
+            "海洋学院",
+            "材料科学与工程学院",
+            "理学院",
+            "机械工程学院",
+            "人文学院",
+            "信息工程学院",
+            "设计艺术学院",
+            "计算机科学与技术学院",
+            "法学院",
+            "经济学院",
+            "马克思主义学院",
+            "建筑工程学院",
+            "政治与公共管理学院",
+            "生物工程学院",
+            "环境学院",
+            "国际学院",
+            "教育科学与技术学院",
+            "健行学院",
+            "外国语学院",
+            "管理学院"
+        ];
         private identity = ["学生", "教职工", "校友", "其他"];
         private campus = ["屏峰", "朝晖"];
 
@@ -99,45 +122,19 @@
 
         private idCard2 = "";
 
-        private createOrUpdate() {
-            if (this.isUpdate) {
-                this.updateUser();
+        private async createOrUpdate() {
+
+            const api = this.isUpdate ? apiMap.updateUser : apiMap.createUser;
+            this.$store.commit("setLoading", true);
+            const res = await postData(API(api), this.user);
+            this.$store.commit("setLoading", false);
+            if (res.code === 1) {
+                await this.$router.push("/Home");
+                await this.$store.dispatch("getMyInfo");
+                this.$store.commit("showSuccessbar", "报名成功");
             } else {
-                this.createUser();
+                this.$store.commit("showErrorbar", res.data);
             }
-        }
-
-        private createUser() {
-            postData(API(apiMap.createUser), this.user)
-                .then((res) => {
-                    if (res.code === 1) {
-                        this.$router.push("/Home");
-                        this.$store.dispatch("getMyInfo");
-                    } else {
-                        this.$notify({
-                            group: "foo",
-                            title: "Fail",
-                            text: res.data
-                        });
-                    }
-
-                });
-        }
-
-        private updateUser() {
-            postData(API(apiMap.updateUser), this.user)
-                .then((res) => {
-                    if (res.code === 1) {
-                        this.$router.replace("/Home");
-                        this.$store.dispatch("getMyInfo");
-                    } else {
-                        this.$notify({
-                            group: "foo",
-                            title: "Fail",
-                            text: res.data
-                        });
-                    }
-                });
         }
 
         private showAVE() {

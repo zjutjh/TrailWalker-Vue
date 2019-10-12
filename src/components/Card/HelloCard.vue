@@ -7,9 +7,8 @@
             <span class="title font-weight-light">精弘网络</span>
         </v-card-title>
 
-        <v-card-text
-                class="headline font-weight-bold"
-        >天气渐凉，又到了每年精弘毅行的季节了，
+        <v-card-text class="headline font-weight-bold">
+            天气渐凉，又到了每年精弘毅行的季节了，
             叶子一片片飞舞而下，
             某一处山脉又将迎来熙熙攘攘的毅行人潮。
             这是一场盛大的相遇，
@@ -32,10 +31,10 @@
 
                 <v-layout align-center justify-end>
                     <v-icon class="mr-1">person</v-icon>
-                    <span class="subheading mr-2">{{people}}</span>
+                    <span class="subheading mr-2">{{$store.state.systemInfo.apply_count}}</span>
                     <span class="mr-1">·</span>
                     <v-icon class="mr-1">group</v-icon>
-                    <span class="subheading">{{groups}}</span>
+                    <span class="subheading">{{$store.state.systemInfo.group_count}}</span>
                 </v-layout>
             </v-list-item>
         </v-card-actions>
@@ -43,26 +42,9 @@
 </template>
 <script lang="ts">
     import {Component, Vue} from "vue-property-decorator";
-    import {getData} from "@/utils/fetch";
-    import {API, apiMap} from "@/utils/api/api";
-
 
     @Component
     export default class HelloCard extends Vue {
-        private groups = 0;
-        private people = 0;
-
-        private getInfo() {
-            getData(API(apiMap.systemInfo))
-                .then((res) => {
-                    this.groups = res.data.group_count;
-                    this.people = res.data.apply_count;
-                });
-        }
-
-        private mounted() {
-            this.getInfo();
-        }
     }
 </script>
 

@@ -14,7 +14,9 @@ export default new Vuex.Store({
         currentGroup: {},
         isLogin: false,
         isEnd: false,
-        systemInfo: {}
+        systemInfo: {},
+        isLoading: true,
+        snackbar: {text: "TEST", isShow: false, color: "success"}
     },
     mutations: {
         setCurrentUser(state, user: IUser) {
@@ -31,12 +33,25 @@ export default new Vuex.Store({
         },
         setLogin(state, isLogin = true) {
             state.isLogin = isLogin;
+        },
+        setLoading(state, isLoading = true) {
+            state.isLoading = isLoading;
+        },
+        showSuccessbar(state, text) {
+            state.snackbar.text = text;
+            state.snackbar.isShow = true;
+            state.snackbar.color = "success";
+        },
+        showErrorbar(state, text) {
+            state.snackbar.text = text;
+            state.snackbar.isShow = true;
+            state.snackbar.color = "error";
         }
     },
     actions: {
 
         async getMyInfo(context) {
-            let res = await postData(API(apiMap.getUserInfo), null);
+            const res = await postData(API(apiMap.getUserInfo), null);
 
             if (res.code === 1) {
                 context.commit("setCurrentUser", res.data);
@@ -46,18 +61,17 @@ export default new Vuex.Store({
             }
 
         },
-        getRoutesInfo(context) {
-            postData(API(apiMap.listRoutes), null)
-                .then((res) => {
-                    if (res.code === 1) {
-                        if (res.data !== {}) {
-                            context.commit("setRoutes", res.data);
-                        }
-                    }
-                });
+        async getRoutesInfo(context) {
+            const res = await postData(API(apiMap.listRoutes), null);
+
+            if (res.code === 1 && res.data !== {}) {
+                context.commit("setRoutes", res.data);
+            }
         },
         async getMyGroup(context) {
-            let res = await postData(API(apiMap.getMyGroupInfo));
+
+            const res = await postData(API(apiMap.getMyGroupInfo));
+
             if (res.code === 1) {
                 context.commit("setCurrentGroup", res.data as IGroup);
             } else {
@@ -66,13 +80,19 @@ export default new Vuex.Store({
 
         },
         async getSystemInfo(context) {
-            let res = await postData(API(apiMap.systemInfo));
-
+            context.commit("setLoading", true);
+            const res = await postData(API(apiMap.systemInfo));
+            context.commit("setLoading", false);
             if (res.code === 1) {
                 context.commit("setSystemInfo", res.data);
-
             }
-
+        },
+        showLoading(context) {
+            context.commit("setLoading", true);
+        },
+        closeLoading(context) {
+            context.commit("setLoading", false);
         }
+
     },
 });

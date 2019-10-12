@@ -14,6 +14,7 @@ import Notifications from "vue-notification";
 Vue.use(Notifications);
 Vue.config.productionTip = false;
 
+// @ts-ignore
 new Vue({
     router,
     store,

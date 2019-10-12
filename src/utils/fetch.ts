@@ -35,7 +35,7 @@ async function getData(url: string, data: any = ""): Promise<IResponse> {
     // Default options are marked with *
     const response = await fetch(url, {
         cache: "no-cache",
-        credentials: "include",
+        credentials: "same-origin",
         method: "GET",
         mode: "cors",
         redirect: "follow",

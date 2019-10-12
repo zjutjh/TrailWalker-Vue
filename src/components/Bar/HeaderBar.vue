@@ -12,7 +12,7 @@
     </v-app-bar>
 </template>
 <script lang="ts">
-import { Component, Provide, Vue, Watch } from "vue-property-decorator";
+import { Component, Vue} from "vue-property-decorator";
 @Component
 export default class HeaderBar extends Vue {}
 </script>

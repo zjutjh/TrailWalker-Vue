@@ -5,7 +5,7 @@
                 :key="index"
                 :value="item.name"
                 @click="tagClicked(item.name)"
-                v-if="!($store.state.isLogin===false&&item.name==='Group')"
+                v-if="!($store.state.currentUser===null&&item.name==='Group')"
         >
             <span>{{item.name}}</span>
             <v-icon>{{item.icon}}</v-icon>
@@ -15,11 +15,7 @@
 <script lang="ts">
     import router from "@/router";
     import {Component, Vue, Watch} from "vue-property-decorator";
-
-    interface INavContent {
-        name: string;
-        icon: string;
-    }
+    import INavContent from "@/interface/INavContent";
 
     @Component
     export default class BottomBar extends Vue {

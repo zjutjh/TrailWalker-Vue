@@ -14,9 +14,10 @@
 
     @Component({components: {MyInfo, CreateUser}})
     export default class Me extends Vue {
-        private mounted() {
-            if (!this.$store.state.isLogin) {
-                this.$router.push("/Me/create");
+        private async mounted() {
+            await this.$store.dispatch("getMyInfo");
+            if (!this.$store.state.currentUser) {
+                await this.$router.push("/Me/create");
             }
         }
     }

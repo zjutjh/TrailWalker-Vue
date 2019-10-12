@@ -1,21 +1,17 @@
 <template>
     <div v-if="$store.state.currentGroup" class="mx-auto" style="max-width:30rem;">
         <h1>我的队伍</h1>
-        <v-card class="radius-card text-center">
+        <v-card class="text-center">
             <v-card-title>
                 <div style="margin-left:auto;margin-right:auto;">
                     <v-avatar v-if="$store.state.currentGroup" width="5rem" height="5rem">
                         <v-img
                                 :src="$store.state.currentGroup.logo" alt=""
-                                :lazy-src="`https://picsum.photos/10/6?image=${1 * 5 + 10}`"
+                                :lazy-src="`https://picsum.photos/10/6?image=15`"
                                 aspect-ratio="1"
                         >
                             <template v-slot:placeholder>
-                                <v-row
-                                        class="fill-height ma-0"
-                                        align="center"
-                                        justify="center"
-                                >
+                                <v-row class="fill-height ma-0" align="center" justify="center">
                                     <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
                                 </v-row>
                             </template>
@@ -56,13 +52,9 @@
                 </v-list-item>
                 <v-layout>
                     <v-flex>
-                        <v-chip
-                                link
+                        <v-chip link v-for="(mate, ix) in groupMates" :key="ix" @click="chipClick(mate)"
+                                @click:close="knit(mate)"
                                 :close="$store.state.currentGroup.captain_id===$store.state.currentUser.id&&mate.id!==$store.state.currentGroup.captain_id"
-                                v-for="(mate, ix) in groupMates"
-                                :key="ix"
-                                @click="chipClick(mate)"
-                                @close="knit(mate)"
                         >
                             <v-avatar style="margin-left: -0.5rem">
                                 <v-img :src="mate.logo"></v-img>
@@ -104,7 +96,6 @@
                 </v-sheet>
             </v-bottom-sheet>
         </div>
-
     </div>
 </template>
 <script lang="ts">
@@ -112,7 +103,6 @@
     import {API, apiMap} from "@/utils/api/api";
 
     import {postData} from "@/utils/fetch";
-    import IGroup from "@/interface/IGroup";
     import IUser from "@/interface/IUser";
 
     @Component({components: {}})
@@ -130,104 +120,89 @@
 
         private async getMyGroup() {
             await this.$store.dispatch("getMyGroup");
-            this.getMyMates();
+            await this.getMyMates();
         }
 
-        private getMyMates() {
-            postData(API(apiMap.listGroupMembers))
-                .then((res) => {
-                    this.groupMates = res.data;
-                });
+        private async getMyMates() {
+            const res = await postData(API(apiMap.listGroupMembers));
+            this.groupMates = res.data;
         }
 
-        private knit(user: IUser) {
-            postData(API(apiMap.deleteGroupMember), {user_id: user.id})
-                .then((res) => {
-                    if (res.code === 1) {
-                        this.getMyGroup();
+        private async knit(user: IUser) {
+            this.$store.commit("setLoading", false);
+            const res = await postData(API(apiMap.deleteGroupMember), {user_id: user.id});
+            this.$store.commit("setLoading", false);
 
-                        this.$router.push("/Group");
-                    } else {
-                        this.$notify({
-                            group: "foo",
-                            title: "Fail",
-                            text: res.data
-                        });
-                    }
+            if (res.code === 1) {
+                this.getMyGroup();
+                this.$store.commit("showSuccessbar", "踢人成功");
+                await this.$router.push("/Group");
+            } else {
+                this.$store.commit("showErrorbar", res.data);
+            }
 
-                });
         }
 
-        private breakGroup() {
-            postData(API(apiMap.breakGroup))
-                .then(async (res) => {
-                    if (res.code !== 1) {
-                        this.$notify({
-                            group: "foo",
-                            title: "Fail",
-                            text: res.data
-                        });
-                        return;
-                    }
+        private async breakGroup() {
+            this.$store.commit("setLoading", true);
+            const res = await postData(API(apiMap.breakGroup));
+            this.$store.commit("setLoading", false);
+            if (res.code !== 1) {
+                this.$store.commit("showErrorbar", res.data);
+            } else {
+                this.$store.commit("showSuccessbar", "解散成功");
+                await this.getMyGroup();
+                await this.$router.push("/Group/No");
+            }
 
-                    await this.getMyGroup();
 
-                    await this.$router.push("/Group/No");
-                });
         }
 
-        private unsubmit() {
-            postData(API(apiMap.unsubmitGroup))
-                .then((res) => {
-                    if (res.code !== 1) {
-                        this.$notify({
-                            group: "foo",
-                            title: "Fail",
-                            text: res.data
-                        });
-                        return;
-                    }
-                    this.getMyGroup();
-                    this.$router.push("/Group");
-                });
+        private async unsubmit() {
+            this.$store.commit("setLoading", true);
+            const res = await postData(API(apiMap.unsubmitGroup));
+            this.$store.commit("setLoading", false);
+            if (res.code !== 1) {
+                this.$store.commit("showErrorbar", res.data);
+            } else {
+                this.$store.commit("showSuccessbar", "取消队伍报名成功");
+                this.getMyGroup();
+                await this.$router.push("/Group");
+            }
         }
 
-        private submit() {
-            postData(API(apiMap.submitGroup))
-                .then((res) => {
-                    if (res.code !== 1) {
-                        this.$notify({
-                            group: "foo",
-                            title: "Fail",
-                            text: res.data
-                        });
-                        return;
-                    }
-                    this.getMyGroup();
-                    this.$router.push("/Group");
-                });
+        private async submit() {
+            this.$store.commit("setLoading", true);
+            const res = await postData(API(apiMap.submitGroup));
+            this.$store.commit("setLoading", false);
+
+            if (res.code !== 1) {
+                this.$store.commit("showErrorbar", res.data);
+            } else {
+                this.$store.commit("showSuccessbar", "提交成功,请保持关注浙江工业大学精弘网络微信公众号,后期消息将通过公众号推送");
+                this.getMyGroup();
+                await this.$router.push("/Group");
+            }
         }
 
-        private leaveGroup() {
-            postData(API(apiMap.leaveGroup))
-                .then(async (res) => {
-                    if (res.code !== 1) {
-                        this.$notify({
-                            group: "foo",
-                            title: "Fail",
-                            text: res.data
-                        });
-                        return;
-                    }
+        private async leaveGroup() {
+            this.$store.commit("setLoading", true);
+            const res = await postData(API(apiMap.leaveGroup));
+            this.$store.commit("setLoading", false);
 
-                    await this.getMyGroup();
-                    await this.$router.push("/Group/No");
-                });
+            if (res.code !== 1) {
+                this.$store.commit("showErrorbar", res.data);
+            } else {
+                this.$store.commit("showSuccessbar", "操作成功");
+            }
+
+            await this.getMyGroup();
+            await this.$router.push("/Group/No");
+
         }
 
         private mounted() {
             this.getMyGroup();
-
         }
 
         private chipClick(mate: IUser) {

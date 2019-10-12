@@ -1,31 +1,41 @@
 <template>
     <v-app>
+
         <header-bar></header-bar>
         <v-content class="content">
-            <notifications group="foo" position="top center"/>
+            <v-snackbar v-model="$store.state.snackbar.isShow" top :color="$store.state.snackbar.color"> {{ $store.state.snackbar.text }}
+                <v-btn color="white" text @click="$store.state.snackbar.isShow = false"> Close</v-btn>
+            </v-snackbar>
             <transition name="slide-x-transition">
                 <router-view/>
             </transition>
         </v-content>
         <bottom-bar v-if="$store.state.systemInfo.state === 1"></bottom-bar>
+
+        <v-overlay :value="$store.state.isLoading">
+            <v-progress-circular
+                    :size="50"
+                    color="primary"
+                    indeterminate
+            ></v-progress-circular>
+        </v-overlay>
     </v-app>
 </template>
 
 <script lang="ts">
-    import Vue from "vue";
+    import {Component, Vue} from "vue-property-decorator";
     import BottomBar from "./components/Bar/BottomBar.vue";
     import HeaderBar from "./components/Bar/HeaderBar.vue";
     import {postData} from "./utils/fetch";
     import {API, apiMap} from "@/utils/api/api";
-    import IUser from "./interface/IUser";
 
-    export default Vue.extend({
-        name: "App",
-        components: {BottomBar, HeaderBar},
-        async created() {
+    @Component({components: {BottomBar, HeaderBar}})
+    export default class App extends Vue {
+        private async created() {
+
+            alert("当前系统测试中，不是正式报名，报名无效。");
+
             await this.$store.dispatch("getSystemInfo");
-            await this.$store.dispatch("getMyInfo");
-
             if (this.$store.state.systemInfo.state < 1) {
                 await this.$router.push("/End");
             }
@@ -33,32 +43,31 @@
             const search = window.location.search;
             try {
                 const codex = search.split("?")[1].split("&")[0].split("=")[1];
-                postData(API(apiMap.login), {code: codex}).then((res) => {
-                    if (res.code === 1) {
-                        this.$store.dispatch("getMyInfo");
-                        this.$notify({
-                            group: "foo",
-                            title: "Success",
-                            text: "微信登录成功"
-                        });
-                    } else {
-                        //window.location.replace(API(apiMap.wxLogin));
-                    }
-                });
-            } catch (e) {
-                //window.location.replace(API(apiMap.wxLogin));
-            }
-        }
+                if (!codex) {
+                    window.location.replace(API(apiMap.wxLogin));
+                }
 
-    });
+                await this.$store.dispatch("showLoading");
+                const res = await postData(API(apiMap.login), {code: codex});
+                await this.$store.dispatch("closeLoading");
+
+                if (res.code === 1) {
+                    await this.$store.dispatch("getMyInfo");
+                    this.$store.commit("showSuccessbar", "微信登录成功");
+                } else {
+                    window.location.replace(API(apiMap.wxLogin));
+                }
+
+            } catch {
+                window.location.replace(API(apiMap.wxLogin));
+            }
+
+        }
+    }
 </script>
 <style>
     h1 {
         margin: 1.5rem;
-    }
-
-    .radius-card {
-        border-radius: 1rem !important;
     }
 
     .content {

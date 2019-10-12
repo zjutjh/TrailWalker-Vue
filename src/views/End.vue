@@ -2,22 +2,17 @@
     <div class="flex">
         <v-card class="flex-item mx-auto" style="max-width:25rem;">
             <v-img src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg" height="200px"></v-img>
-
             <v-card-title>
                 <div>报名已经结束</div>
                 <span class="grey--text subtitle-1">感谢您的关注</span>
             </v-card-title>
-
             <v-card-actions>
                 <v-btn text color="purple">Explore</v-btn>
-
                 <v-spacer></v-spacer>
-
                 <v-btn icon @click="show = !show">
                     <v-icon>{{ show ? 'keyboard_arrow_down' : 'keyboard_arrow_up' }}</v-icon>
                 </v-btn>
             </v-card-actions>
-
             <v-expand-transition>
                 <div v-show="show">
                     <v-card-text>I'm a thing. But, like most politicians, he promised more than he could deliver. You
@@ -34,7 +29,6 @@
 
 <script lang="ts">
     import {Component, Vue} from "vue-property-decorator";
-
     import MyGroup from "@/components/Group/MyGroup.vue";
 
     @Component({components: {MyGroup}})

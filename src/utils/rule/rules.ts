@@ -66,7 +66,7 @@ const idCardRules = [
 ];
 const sidRules = [
     (v: string) => !!v || "需要学号",
-    (v: string) => (v && Rx.sid(v))|| "错误的学号"
+    (v: string) => (v && Rx.sid(v)) || "错误的学号"
 ];
 const phoneRules = [
     (v: string) => !!v || "需要手机号",
