@@ -69,10 +69,10 @@
                     <v-btn color="error" v-if="$store.state.currentGroup.is_submit===1" @click="unsubmit">取消报名</v-btn>
                     <v-btn color="error" v-else @click="submit">报名</v-btn>
                     <v-btn color="error" v-if="$store.state.currentGroup.is_submit!==1" @click="breakGroup">解散</v-btn>
-                    <v-btn color="error" @click="$router.push('/Group/Update')">修改</v-btn>
+                    <v-btn color="error" v-if="$store.state.currentGroup.is_submit!==1" @click="$router.push('/Group/Update')">修改</v-btn>
                 </div>
                 <div v-else>
-                    <v-btn color="error" @click="leaveGroup">离开</v-btn>
+                    <v-btn  v-if="$store.state.currentGroup.is_submit!==1" color="error" @click="leaveGroup">离开</v-btn>
                 </div>
             </v-card-actions>
         </v-card>
@@ -88,10 +88,6 @@
                         <h2>邮箱 {{selectedMember.email}}</h2>
                         <h2>QQ {{selectedMember.qq}}</h2>
                         <h2>微信 {{selectedMember.wx_id}}</h2>
-                        <div class="text-center" style="margin:1rem;"
-                             v-if="selectedMember.id!==$store.state.currentGroup.captain_id">
-                            <v-btn @click="knit">踢出</v-btn>
-                        </div>
                     </div>
                 </v-sheet>
             </v-bottom-sheet>
@@ -167,7 +163,7 @@
             } else {
                 this.$store.commit("showSuccessbar", "取消队伍报名成功");
                 this.getMyGroup();
-                await this.$router.push("/Group");
+                await this.$router.replace("/Group");
             }
         }
 
@@ -181,7 +177,7 @@
             } else {
                 this.$store.commit("showSuccessbar", "提交成功,请保持关注浙江工业大学精弘网络微信公众号,后期消息将通过公众号推送");
                 this.getMyGroup();
-                await this.$router.push("/Group");
+                await this.$router.replace("/Group");
             }
         }
 
@@ -197,7 +193,7 @@
             }
 
             await this.getMyGroup();
-            await this.$router.push("/Group/No");
+            await this.$router.replace("/Group/No");
 
         }
 

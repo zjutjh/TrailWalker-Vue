@@ -3,16 +3,17 @@
 
         <header-bar></header-bar>
         <v-content class="content">
-            <v-snackbar v-model="$store.state.snackbar.isShow" top :color="$store.state.snackbar.color"> {{ $store.state.snackbar.text }}
+            <v-snackbar v-model="$store.state.snackbar.isShow" top :color="$store.state.snackbar.color"> {{
+                $store.state.snackbar.text }}
                 <v-btn color="white" text @click="$store.state.snackbar.isShow = false"> Close</v-btn>
             </v-snackbar>
             <transition name="slide-x-transition">
                 <router-view/>
             </transition>
         </v-content>
-        <bottom-bar v-if="$store.state.systemInfo.state === 1"></bottom-bar>
+        <bottom-bar v-if="$store.state.systemInfo.state === 1&&isOriginHei"></bottom-bar>
 
-        <v-overlay :value="$store.state.isLoading">
+        <v-overlay :value="$store.state.isLoading" style="z-index: 99999">
             <v-progress-circular
                     :size="50"
                     color="primary"
@@ -36,32 +37,46 @@
             alert("当前系统测试中，不是正式报名，报名无效。");
 
             await this.$store.dispatch("getSystemInfo");
-            if (this.$store.state.systemInfo.state < 1) {
-                await this.$router.push("/End");
-            }
 
+            if (this.$store.state.systemInfo.state < 1) {
+                await this.$router.replace("/End");
+            }
             const search = window.location.search;
             try {
                 const codex = search.split("?")[1].split("&")[0].split("=")[1];
-                if (!codex) {
+                if (codex === "") {
                     window.location.replace(API(apiMap.wxLogin));
-                }
-
-                await this.$store.dispatch("showLoading");
-                const res = await postData(API(apiMap.login), {code: codex});
-                await this.$store.dispatch("closeLoading");
-
-                if (res.code === 1) {
-                    await this.$store.dispatch("getMyInfo");
-                    this.$store.commit("showSuccessbar", "微信登录成功");
                 } else {
-                    window.location.replace(API(apiMap.wxLogin));
+                    await this.$store.dispatch("showLoading");
+                    const res = await postData(API(apiMap.login), {code: codex});
+                    await this.$store.dispatch("closeLoading");
+                    if (res.code === 1) {
+                        await this.$store.dispatch("getRoutesInfo");
+                        await this.$store.dispatch("getMyInfo");
+                        this.$store.commit("showSuccessbar", "微信登录成功");
+                    } else {
+                        window.location.replace(API(apiMap.wxLogin));
+                    }
                 }
 
             } catch {
                 window.location.replace(API(apiMap.wxLogin));
             }
 
+        }
+
+        private isOriginHei = true; //显示或者隐藏button
+        private documentHeight = document.documentElement.clientHeight;  //默认屏幕高度
+        private mounted() {
+            window.onresize = () => {
+                return (() => {
+                    if (this.documentHeight > document.documentElement.clientHeight) {
+                        this.isOriginHei = false;
+                    } else {
+                        this.isOriginHei = true;
+                    }
+                })();
+            };
         }
     }
 </script>

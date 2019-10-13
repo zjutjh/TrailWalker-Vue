@@ -119,10 +119,9 @@ import {apiMap} from "@/utils/api/api";
         }
 
         private mounted() {
-            this.$store.dispatch("getRoutesInfo");
             if (this.isUpdate) {
                 this.$store.dispatch("getMyGroup");
-                this.group = this.$store.state.currentGroup;
+                this.group = Object.assign({},this.$store.state.currentGroup);
             }
         }
     }

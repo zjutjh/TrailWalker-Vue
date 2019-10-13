@@ -9,7 +9,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
     state: {
-        currentUser: {},
+        currentUser: null,
         routes: [],
         currentGroup: {},
         isLogin: false,
@@ -19,7 +19,7 @@ export default new Vuex.Store({
         snackbar: {text: "TEST", isShow: false, color: "success"}
     },
     mutations: {
-        setCurrentUser(state, user: IUser) {
+        setCurrentUser(state, user) {
             state.currentUser = user;
         },
         setCurrentGroup(state, group: IGroup) {
@@ -58,6 +58,7 @@ export default new Vuex.Store({
                 context.commit("setLogin");
             } else {
                 context.commit("setLogin", false);
+                context.commit("setCurrentUser", null);
             }
 
         },

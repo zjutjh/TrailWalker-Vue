@@ -17,7 +17,6 @@
     export default class Group extends Vue {
         private async mounted() {
             await this.$store.dispatch("getMyInfo");
-            await this.$store.dispatch("getMyGroup");
             if (this.$store.state.currentUser.state <= 1) {
                 await this.$router.push("/Group/No");
             }

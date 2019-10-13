@@ -16,8 +16,8 @@
     export default class Me extends Vue {
         private async mounted() {
             await this.$store.dispatch("getMyInfo");
-            if (!this.$store.state.currentUser) {
-                await this.$router.push("/Me/create");
+            if (this.$store.state.currentUser === null) {
+                await this.$router.replace("/Me/create");
             }
         }
     }

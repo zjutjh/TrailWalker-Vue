@@ -123,15 +123,15 @@
         private idCard2 = "";
 
         private async createOrUpdate() {
-
+            this.sheet = false;
             const api = this.isUpdate ? apiMap.updateUser : apiMap.createUser;
             this.$store.commit("setLoading", true);
             const res = await postData(API(api), this.user);
             this.$store.commit("setLoading", false);
             if (res.code === 1) {
-                await this.$router.push("/Home");
+                await this.$router.replace("/Home");
                 await this.$store.dispatch("getMyInfo");
-                this.$store.commit("showSuccessbar", "报名成功");
+                this.$store.commit("showSuccessbar", "成功");
             } else {
                 this.$store.commit("showErrorbar", res.data);
             }
@@ -145,7 +145,7 @@
         private mounted() {
             this.isUpdate = this.$store.state.isLogin;
             if (this.isUpdate) {
-                this.user = this.$store.state.currentUser;
+                this.user = Object.assign({},this.$store.state.currentUser);
             }
         }
     }

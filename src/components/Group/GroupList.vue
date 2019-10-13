@@ -137,7 +137,7 @@
                 this.applySheet = false;
                 this.$store.commit("showSuccessbar", "申请中");
                 await this.$store.dispatch("getMyInfo");
-                await this.$router.push("/Group/Wait");
+                await this.$router.replace("/Group/Wait");
             } else {
                 this.$store.commit("showErrorbar", res.data);
             }

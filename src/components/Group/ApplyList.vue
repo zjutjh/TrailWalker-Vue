@@ -1,11 +1,11 @@
 <template>
-    <div v-if="applyUsers.length>0" class="mx-auto" style="max-width:30rem;">
+    <div v-if="applyUsers.data.length>0" class="mx-auto" style="max-width:30rem;">
         <h1>申请列表</h1>
         <v-card >
             <v-list two-line>
-                <template v-for="(item, i) in applyUsers">
+                <template v-for="(item, i) in applyUsers.data">
                     <v-divider v-if="i!==0" :key="i"></v-divider>
-                    <v-list-item @click="userClicked(i)" :key="applyUsers.length+i">
+                    <v-list-item @click="userClicked(i)" :key="applyUsers.data.length+i">
                         <v-list-item-avatar>
                             <v-img :src="item.logo"></v-img>
                         </v-list-item-avatar>
@@ -71,7 +71,7 @@
         private confirmSheet = false;
 
         private userClicked(userIndex: number) {
-            this.selectedUser = this.applyUsers[userIndex];
+            this.selectedUser = this.applyUsers.data[userIndex];
             this.confirmSheet = true;
         }
 
@@ -91,6 +91,7 @@
          * 同意入队
          */
         private async approve() {
+            this.confirmSheet = false;
             this.$store.commit("setLoading", true);
             const res = await postData(API(apiMap.agreeApply), {apply_id: (this.selectedUser as IUser).id});
             this.$store.commit("setLoading", false);
@@ -109,12 +110,13 @@
          * 拒绝入队
          */
         private async refuse() {
+            this.confirmSheet = false;
             this.$store.commit("setLoading", true);
             const res = await postData(API(apiMap.refuseApply), {apply_id: (this.selectedUser as IUser).id});
             this.$store.commit("setLoading", false);
 
             if (res.code === 1) {
-                this.confirmSheet = false;
+
                 this.$store.commit("showSuccessbar", "操作成功");
             } else {
                 this.$store.commit("showErrorbar", res.data);

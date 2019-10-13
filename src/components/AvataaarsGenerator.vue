@@ -37,7 +37,7 @@
 <script lang="ts">
     import {Component,  Vue, Emit, Model} from "vue-property-decorator";
     @Component
-    export default class MyCard extends Vue {
+    export default class AvataaarsGenerator extends Vue {
         private avatarStyle = ["Circle", "Transparent"];
         private topType = ["NoHair", "Eyepatch", "Hat", "Hijab", "Turban", "WinterHat1",
             "WinterHat2", "WinterHat3", "WinterHat4", "LongHairBigHair", "LongHairBob", "LongHairBun",
@@ -78,7 +78,7 @@
 
         get avax() {
             const sc = `
-https://avataaars.io/?avatarStyle=${this.axa[0]}
+http://walk.zjutjh.com/avataaars/?avatarStyle=${this.axa[0]}
 &topType=${this.axa[1]}
 &accessoriesType=${this.axa[2]}
 &hairColor=${this.axa[3]}

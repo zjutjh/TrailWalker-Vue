@@ -7,11 +7,9 @@ import "./registerServiceWorker";
 import vuetify from "./plugins/vuetify";
 import "@babel/polyfill";
 import "roboto-fontface/css/roboto/roboto-fontface.css";
-import "@mdi/font/css/materialdesignicons.css";
-import Notifications from "vue-notification";
+import ErrorPlugin from "./plugins/errorPlugin";
+Vue.use(ErrorPlugin);
 
-
-Vue.use(Notifications);
 Vue.config.productionTip = false;
 
 // @ts-ignore
