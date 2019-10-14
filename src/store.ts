@@ -15,12 +15,16 @@ export default new Vuex.Store({
         isLogin: false,
         isEnd: false,
         systemInfo: {},
+        groupMates:{},
         isLoading: true,
         snackbar: {text: "TEST", isShow: false, color: "success"}
     },
     mutations: {
         setCurrentUser(state, user) {
             state.currentUser = user;
+        },
+        setGroupMates(state, groupMates) {
+            state.groupMates = groupMates;
         },
         setCurrentGroup(state, group: IGroup) {
             state.currentGroup = group;
@@ -77,6 +81,16 @@ export default new Vuex.Store({
                 context.commit("setCurrentGroup", res.data as IGroup);
             } else {
                 context.commit("setCurrentGroup", {});
+            }
+
+        },
+        async getMyGroupMember(context) {
+
+            const res = await postData(API(apiMap.listGroupMembers));
+            if (res.code === 1) {
+                context.commit("setGroupMates", res.data);
+            } else {
+                context.commit("setGroupMates", {});
             }
 
         },

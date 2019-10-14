@@ -3,6 +3,7 @@
  * } error
  * @param ret
  */
+import Vue from "vue";
 
 function isPromise(ret: { then: any; catch: any; }) {
     return (ret && typeof ret.then === "function" && typeof ret.catch === "function");
@@ -10,10 +11,12 @@ function isPromise(ret: { then: any; catch: any; }) {
 
 const errorHandler = (error: any, vm: any, info: any) => {
     console.error("抛出全局异常");
-    vm.$store.state.commit("showErrorbar", "网络异常");
+    // @ts-ignore
     console.error(vm);
     console.error(error);
     console.error(info);
+    // @ts-ignore
+    Vue.$store.state.commit("showErrorbar", "网络异常");
 };
 
 function registerActionHandle(actions: { [x: string]: (...args: any[]) => any; }) {

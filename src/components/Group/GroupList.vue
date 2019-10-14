@@ -26,7 +26,7 @@
                         </v-list-item-avatar>
                         <v-list-item-content>
                             <v-list-item-title>
-                                {{item.name}}
+                                {{item.name}}({{item.captain_name}})
                                 <span class="v-list-item__subtitle">{{item.description}}</span>
                             </v-list-item-title>
                             <v-list-item-subtitle>

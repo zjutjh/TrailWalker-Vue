@@ -78,7 +78,7 @@
 
         get avax() {
             const sc = `
-http://walk.zjutjh.com/avataaars/?avatarStyle=${this.axa[0]}
+https://avataaars.io/?avatarStyle=${this.axa[0]}
 &topType=${this.axa[1]}
 &accessoriesType=${this.axa[2]}
 &hairColor=${this.axa[3]}

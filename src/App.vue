@@ -40,6 +40,7 @@
 
             if (this.$store.state.systemInfo.state < 1) {
                 await this.$router.replace("/End");
+                return;
             }
             const search = window.location.search;
             try {

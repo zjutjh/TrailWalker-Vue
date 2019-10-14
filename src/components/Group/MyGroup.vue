@@ -52,10 +52,11 @@
                 </v-list-item>
                 <v-layout>
                     <v-flex>
-                        <v-chip link v-for="(mate, ix) in groupMates" :key="ix" @click="chipClick(mate)"
-                                @click:close="knit(mate)"
+                        <v-chip link v-for="(mate, ix) in $store.state.groupMates"
+                                :key="ix"
+                                @click="chipClick(mate)"
                                 :close="$store.state.currentGroup.captain_id===$store.state.currentUser.id&&mate.id!==$store.state.currentGroup.captain_id"
-                        >
+                                @click:close="knit(mate)">
                             <v-avatar style="margin-left: -0.5rem">
                                 <v-img :src="mate.logo"></v-img>
                             </v-avatar>
@@ -69,10 +70,12 @@
                     <v-btn color="error" v-if="$store.state.currentGroup.is_submit===1" @click="unsubmit">取消报名</v-btn>
                     <v-btn color="error" v-else @click="submit">报名</v-btn>
                     <v-btn color="error" v-if="$store.state.currentGroup.is_submit!==1" @click="breakGroup">解散</v-btn>
-                    <v-btn color="error" v-if="$store.state.currentGroup.is_submit!==1" @click="$router.push('/Group/Update')">修改</v-btn>
+                    <v-btn color="error" v-if="$store.state.currentGroup.is_submit!==1"
+                           @click="$router.push('/Group/Update')">修改
+                    </v-btn>
                 </div>
                 <div v-else>
-                    <v-btn  v-if="$store.state.currentGroup.is_submit!==1" color="error" @click="leaveGroup">离开</v-btn>
+                    <v-btn v-if="$store.state.currentGroup.is_submit!==1" color="error" @click="leaveGroup">离开</v-btn>
                 </div>
             </v-card-actions>
         </v-card>
@@ -88,6 +91,9 @@
                         <h2>邮箱 {{selectedMember.email}}</h2>
                         <h2>QQ {{selectedMember.qq}}</h2>
                         <h2>微信 {{selectedMember.wx_id}}</h2>
+                        <v-btn v-if="$store.state.currentGroup.is_submit!==1&&$store.state.currentGroup.captain_id===$store.state.currentUser.id&&selectedMember.id!==$store.state.currentGroup.captain_id"
+                               color="error" @click="knit(selectedMember)">提出
+                        </v-btn>
                     </div>
                 </v-sheet>
             </v-bottom-sheet>
@@ -110,7 +116,6 @@
         })
         private isEnd?: boolean;
 
-        private groupMates = {};
         private MemberSheet = false;
         private selectedMember: IUser | null = null;
 
@@ -120,15 +125,15 @@
         }
 
         private async getMyMates() {
-            const res = await postData(API(apiMap.listGroupMembers));
-            this.groupMates = res.data;
+           await this.$store.dispatch("getMyGroupMember");
         }
 
         private async knit(user: IUser) {
+
             this.$store.commit("setLoading", false);
             const res = await postData(API(apiMap.deleteGroupMember), {user_id: user.id});
             this.$store.commit("setLoading", false);
-
+            this.MemberSheet = false;
             if (res.code === 1) {
                 this.getMyGroup();
                 this.$store.commit("showSuccessbar", "踢人成功");
