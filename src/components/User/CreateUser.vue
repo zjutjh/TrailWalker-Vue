@@ -10,13 +10,15 @@
             </v-card-title>
             <v-card-text>
                 <v-form ref="form" v-model="valid">
-                    <v-text-field label="姓名" solo clearable v-model="user.name" :rules="nameRules" prepend-icon="mdi-account"></v-text-field>
+                    <v-text-field label="姓名" solo clearable v-model="user.name" :rules="nameRules"
+                                  prepend-icon="mdi-account"></v-text-field>
                     <v-text-field label="身份证" solo clearable v-model="user.id_card" :rules="idCardRules"
                                   prepend-icon="mdi-account-badge"
                                   @focus="idCard2=''" hint="出发前我们会根据身份证核对个人信息"></v-text-field>
                     <v-text-field label="重复身份证" solo clearable v-model="idCard2" prepend-icon="mdi-account-badge"
                                   :rules="[v => !!v&&user.id_card===idCard2 || '身份证不匹配']"></v-text-field>
-                    <v-text-field label="手机号" solo clearable v-model="user.phone" :rules="phoneRules"  prepend-icon="mdi-contact-phone"></v-text-field>
+                    <v-text-field label="手机号" solo clearable v-model="user.phone" :rules="phoneRules"
+                                  prepend-icon="mdi-contact-phone"></v-text-field>
                     <v-select
                             :items="identity"
                             label="身份"
@@ -47,9 +49,11 @@
                     ></v-select>
                     <v-text-field label="  QQ  " solo clearable v-model="user.qq" prepend-icon="mdi-qqchat"
                                   :rules="QQRules"></v-text-field>
-                    <v-text-field label="身高" solo clearable v-model="user.height" suffix="cm" prepend-icon="mdi-human-male-height"
-                                  :rules="[v => !!v&&v<300&&v>50&&v%1 === 0 || '请输入正确的身高']"></v-text-field>
-                    <v-text-field label="邮箱" solo clearable v-model="user.email" :rules="mailRules"  prepend-icon="mdi-email"></v-text-field>
+                    <v-text-field label="身高" solo clearable v-model="user.height" suffix="cm"
+                                  prepend-icon="mdi-human-male-height"
+                                  :rules="heightRules"></v-text-field>
+                    <v-text-field label="邮箱" solo clearable v-model="user.email" :rules="mailRules"
+                                  prepend-icon="mdi-email"></v-text-field>
                     <v-text-field solo clearable v-model="user.wx_id" prepend-icon="mdi-wechat">
                         <template v-slot:label>
                             <div>
@@ -84,7 +88,7 @@
 
 </template>
 <script lang="ts">
-    import {idCardRules, phoneRules, nameRules, sidRules, emailRules, qqRules} from "@/utils/rule/rules";
+    import {idCardRules, phoneRules, nameRules, sidRules, emailRules, qqRules, heightRules} from "@/utils/rule/rules";
     import {Component, Vue} from "vue-property-decorator";
     import Disclaimer from "@/components/Disclaimer.vue";
     import AvataaarsGenerator from "@/components/AvataaarsGenerator.vue";
@@ -132,6 +136,7 @@
         private sidRules = sidRules;
         private mailRules = emailRules;
         private QQRules = qqRules;
+        private heightRules = heightRules;
         private user: any = {};
         private valid: boolean = false;
 

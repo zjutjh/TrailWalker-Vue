@@ -80,7 +80,7 @@
                                 :key="ix"
                                 @click="chipClick(mate)"
                                 :close="$store.state.currentGroup.captain_id===$store.state.currentUser.id&&mate.id!==$store.state.currentGroup.captain_id&&!isEnd"
-                                @click:close="knit(mate)">
+                                @click:close="knitHandle(mate)">
                             <v-avatar style="margin-left: -0.5rem">
                                 <v-img :src="mate.logo"></v-img>
                             </v-avatar>
@@ -97,7 +97,7 @@
                     <v-btn color="primary" v-else @click="submit">队伍提交
                         <v-icon right>mdi-checkbox-marked-circle</v-icon>
                     </v-btn>
-                    <v-btn color="error" v-if="$store.state.currentGroup.is_submit!==1" @click="breakGroup">解散
+                    <v-btn color="error" v-if="$store.state.currentGroup.is_submit!==1" @click="breakConfirm=true">解散
                         <v-icon right>mdi-bank-remove</v-icon>
                     </v-btn>
                     <v-btn v-if="$store.state.currentGroup.is_submit!==1"
@@ -130,13 +130,35 @@
                         <h2>QQ {{selectedMember.qq}}</h2>
                         <h2>微信 {{selectedMember.wx_id}}</h2>
                         <v-btn v-if="$store.state.currentGroup.is_submit!=1&&$store.state.currentGroup.captain_id===$store.state.currentUser.id&&selectedMember.id!==$store.state.currentGroup.captain_id&&!isEnd"
-                               color="error" @click="knit(selectedMember)">踢出
+                               color="error" @click="knitHandle(selectedMember)">踢出
                             <v-icon right>mdi-foot-print</v-icon>
                         </v-btn>
                     </div>
                 </v-sheet>
             </v-bottom-sheet>
         </div>
+        <v-dialog v-model="breakConfirm" persistent max-width="290">
+            <v-card>
+                <v-card-title class="headline">确定要解散队伍吗？</v-card-title>
+                <v-card-text>没有队伍，你将无法参加精弘毅行</v-card-text>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="green darken-1" text @click="breakConfirm=false">取消</v-btn>
+                    <v-btn color="green darken-1" text @click="breakGroup">确定</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+        <v-dialog v-model="knitConfirm" persistent max-width="290">
+            <v-card v-if="selectedMember">
+                <v-card-title class="headline">确定要踢{{selectedMember.name}}吗？</v-card-title>
+                <v-card-text>队伍人数不足可能无法参加本次活动</v-card-text>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="green darken-1" text @click="knitConfirm=false">取消</v-btn>
+                    <v-btn color="green darken-1" text @click="knit">确定</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </div>
 </template>
 <script lang="ts">
@@ -148,6 +170,9 @@
 
     @Component({components: {}})
     export default class MyGroup extends Vue {
+
+        private breakConfirm = false;
+        private knitConfirm = false;
 
         @Prop({
             type: Boolean,
@@ -163,16 +188,22 @@
             await this.$store.dispatch("getMyGroupMember");
         }
 
-        private async knit(user: IUser) {
+        private async knitHandle(user: IUser) {
+            this.selectedMember = user;
+            this.knitConfirm = true;
+        }
 
-            this.$store.commit("setLoading", false);
-            const res = await postData(API(apiMap.deleteGroupMember), {user_id: user.id});
+        private async knit() {
+            this.knitConfirm = false;
+            if(this.selectedMember===null)return;
+            this.$store.commit("setLoading", true);
+            const res = await postData(API(apiMap.deleteGroupMember), {user_id: this.selectedMember.id});
             this.$store.commit("setLoading", false);
             this.MemberSheet = false;
             if (res.code === 1) {
                 this.getMyGroup();
                 this.$store.commit("showSuccessbar", "踢人成功");
-                await this.$router.push("/Group");
+                this.selectedMember=null
             } else {
                 this.$store.commit("showErrorbar", res.data);
             }

@@ -49,13 +49,13 @@
             "ShortHairShortWaved", "ShortHairSides", "ShortHairTheCaesar", "ShortHairTheCaesarSidePart"];
         private accessoriesType = ["Blank", "Kurt", "Prescription01", "Prescription02",
             "Round", "Sunglasses", "Wayfarers"];
-        private hairClor = ["Black", "Blue01", "Blue02", "Blue03", "Gray01", "Gray02",
+        private cloClor = ["Black", "Blue01", "Blue02", "Blue03", "Gray01", "Gray02",
             "Heather", "PastelBlue", "PastelGreen", "PastelOrange", "PastelRed", "PastelYellow",
             "Pink", "Red", "White"];
         private facialHairType = ["Blank", "BeardMedium", "BeardLight", "BeardMagestic",
             "MoustacheFancy", "MoustacheMagnum"];
         private facialHairColor = ["Auburn", "Black", "Blonde", "BlondeGolden",
-            "Brown", "BrownDark", "Platinum", "Red"];
+            "Brown", "BrownDark", "Platinum", "Red","SilverGray"];
         private clothType = ["BlazerShirt", "BlazerSweater", "CollarSweater", "GraphicShirt",
             "Hoodie", "Overall", "ShirtCrewNeck", "ShirtScoopNeck", "ShirtVNeck"];
         private eyeType = ["Close", "Cry", "Default", "Dizzy", "EyeRoll", "Happy", "Hearts",
@@ -66,7 +66,7 @@
             "FlatNatural", "RaisedExcited", "RaisedExcitedNatural", "SadConcerned", "SadConcernedNatural",
             "UnibrowNatural", "UpDown", "UpDownNatural"];
         private avaList = [this.avatarStyle, this.topType, this.accessoriesType,
-            this.hairClor, this.facialHairType, this.facialHairColor, this.clothType, this.hairClor,
+            this.facialHairColor, this.facialHairType, this.facialHairColor, this.clothType, this.cloClor,
             this.eyeType, this.eyebrowType, this.mouthType, this.skin];
         private labelList = ["头像样式", "头顶", "配件", "发色", "胡子", "胡子颜色", "衣服",
             "衣服颜色", "眼睛", "表情", "嘴形", "肤色"];

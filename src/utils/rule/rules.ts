@@ -9,7 +9,13 @@ class Rx {
         }
         return true;
     }
-
+    public static height(val: string): boolean {
+        const reg = /^[1-9][0-9]{2,3}$/;
+        if (!reg.test(val)||val>'250'||val<'50') {
+            return false;
+        }
+        return true;
+    }
     public static mobilePhone(val: string): boolean {
         const reg = /^1(3|4|5|6|7|8|9)\d{9}$/;
         if (!reg.test(val)) {
@@ -69,4 +75,7 @@ const emailRules = [
 const qqRules = [
     (v: string) => (v && Rx.qq(v)) || "QQ不正确"
 ];
-export {nameRules, idCardRules, phoneRules, sloganRules, sidRules, emailRules, qqRules};
+const heightRules = [
+    (v: string) => (v && Rx.height(v)) || "请输入正确的身高"
+];
+export {nameRules, idCardRules, phoneRules, sloganRules, sidRules, emailRules, qqRules, heightRules};

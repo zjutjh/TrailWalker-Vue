@@ -97,6 +97,7 @@
 
             if (res.code === 1) {
                 await this.$store.dispatch("getMyGroup");
+                await this.$store.dispatch("getMyGroupMember");
                 this.confirmSheet = false;
                 this.$store.commit("showSuccessbar", "操作成功");
             } else {
