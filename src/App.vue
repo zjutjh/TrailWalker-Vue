@@ -3,8 +3,8 @@
 
         <header-bar></header-bar>
         <v-content class="content">
-            <v-snackbar v-model="$store.state.snackbar.isShow" top :color="$store.state.snackbar.color"> {{
-                $store.state.snackbar.text }}
+            <v-snackbar v-model="$store.state.snackbar.isShow" top :color="$store.state.snackbar.color">
+                {{ $store.state.snackbar.text }}
                 <v-btn color="white" text @click="$store.state.snackbar.isShow = false"> Close</v-btn>
             </v-snackbar>
             <transition name="slide-x-transition">
@@ -19,6 +19,7 @@
                     color="primary"
                     indeterminate
             ></v-progress-circular>
+            <h1>等待中</h1>
         </v-overlay>
     </v-app>
 </template>
@@ -37,11 +38,11 @@
             alert("当前系统测试中，不是正式报名，报名无效。");
 
             await this.$store.dispatch("getSystemInfo");
-
-            if (this.$store.state.systemInfo.state < 1) {
-                await this.$router.replace("/End");
+            if (this.$store.state.systemInfo.state === -1) {
+                await this.$router.replace("/Start");
                 return;
             }
+
             const search = window.location.search;
             try {
                 const codex = search.split("?")[1].split("&")[0].split("=")[1];
@@ -52,17 +53,22 @@
                     const res = await postData(API(apiMap.login), {code: codex});
                     await this.$store.dispatch("closeLoading");
                     if (res.code === 1) {
-                        await this.$store.dispatch("getRoutesInfo");
                         await this.$store.dispatch("getMyInfo");
                         this.$store.commit("showSuccessbar", "微信登录成功");
+                        if (this.$store.state.systemInfo.state === 0) {
+                            await this.$store.dispatch("getMyGroup");
+                            await this.$store.dispatch("getMyGroupMember");
+                            await this.$router.replace("/End");
+                        }
+
                     } else {
                         window.location.replace(API(apiMap.wxLogin));
                     }
                 }
-
             } catch {
                 window.location.replace(API(apiMap.wxLogin));
             }
+
 
         }
 

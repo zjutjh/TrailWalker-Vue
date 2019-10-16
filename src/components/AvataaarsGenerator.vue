@@ -35,7 +35,8 @@
     </div>
 </template>
 <script lang="ts">
-    import {Component,  Vue, Emit, Model} from "vue-property-decorator";
+    import {Component, Vue, Emit, Model} from "vue-property-decorator";
+
     @Component
     export default class AvataaarsGenerator extends Vue {
         private avatarStyle = ["Circle", "Transparent"];
@@ -53,6 +54,8 @@
             "Pink", "Red", "White"];
         private facialHairType = ["Blank", "BeardMedium", "BeardLight", "BeardMagestic",
             "MoustacheFancy", "MoustacheMagnum"];
+        private facialHairColor = ["Auburn", "Black", "Blonde", "BlondeGolden",
+            "Brown", "BrownDark", "Platinum", "Red"];
         private clothType = ["BlazerShirt", "BlazerSweater", "CollarSweater", "GraphicShirt",
             "Hoodie", "Overall", "ShirtCrewNeck", "ShirtScoopNeck", "ShirtVNeck"];
         private eyeType = ["Close", "Cry", "Default", "Dizzy", "EyeRoll", "Happy", "Hearts",
@@ -63,7 +66,7 @@
             "FlatNatural", "RaisedExcited", "RaisedExcitedNatural", "SadConcerned", "SadConcernedNatural",
             "UnibrowNatural", "UpDown", "UpDownNatural"];
         private avaList = [this.avatarStyle, this.topType, this.accessoriesType,
-            this.hairClor, this.facialHairType, this.hairClor, this.clothType, this.hairClor,
+            this.hairClor, this.facialHairType, this.facialHairColor, this.clothType, this.hairClor,
             this.eyeType, this.eyebrowType, this.mouthType, this.skin];
         private labelList = ["头像样式", "头顶", "配件", "发色", "胡子", "胡子颜色", "衣服",
             "衣服颜色", "眼睛", "表情", "嘴形", "肤色"];
@@ -101,7 +104,7 @@ https://avataaars.io/?avatarStyle=${this.axa[0]}
             });
         }
 
-        private  randomNum(minNum: number, maxNum: number) {
+        private randomNum(minNum: number, maxNum: number) {
             return Math.floor(Math.random() * (maxNum - minNum + 1) + minNum);
         }
     }

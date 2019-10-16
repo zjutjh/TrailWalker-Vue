@@ -2,20 +2,18 @@ import Vue from "vue";
 import Vuex from "vuex";
 import {postData} from "@/utils/fetch";
 import {API, apiMap} from "@/utils/api/api";
-import IUser from "@/interface/IUser";
-import IGroup from "@/interface/IGroup";
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
     state: {
-        currentUser: null,
+        currentUser: undefined,
         routes: [],
-        currentGroup: {},
+        currentGroup: undefined,
         isLogin: false,
         isEnd: false,
         systemInfo: {},
-        groupMates:{},
+        groupMates: undefined,
         isLoading: true,
         snackbar: {text: "TEST", isShow: false, color: "success"}
     },
@@ -26,7 +24,7 @@ export default new Vuex.Store({
         setGroupMates(state, groupMates) {
             state.groupMates = groupMates;
         },
-        setCurrentGroup(state, group: IGroup) {
+        setCurrentGroup(state, group) {
             state.currentGroup = group;
         },
         setSystemInfo(state, info) {
@@ -78,9 +76,9 @@ export default new Vuex.Store({
             const res = await postData(API(apiMap.getMyGroupInfo));
 
             if (res.code === 1) {
-                context.commit("setCurrentGroup", res.data as IGroup);
+                context.commit("setCurrentGroup", res.data);
             } else {
-                context.commit("setCurrentGroup", {});
+                context.commit("setCurrentGroup", null);
             }
 
         },
@@ -90,7 +88,7 @@ export default new Vuex.Store({
             if (res.code === 1) {
                 context.commit("setGroupMates", res.data);
             } else {
-                context.commit("setGroupMates", {});
+                context.commit("setGroupMates", null);
             }
 
         },

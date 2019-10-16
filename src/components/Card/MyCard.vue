@@ -11,10 +11,8 @@
         <v-card v-else>
             <v-card-title>欢迎</v-card-title>
             <v-avatar width="5rem" height="5rem">
-                <v-img
-                        v-if="$store.state.currentUser.logo" :src="$store.state.currentUser.logo"
-                        :lazy-src="`https://picsum.photos/10/6?image=15`"
-                        aspect-ratio="1"
+                <v-img v-if="$store.state.currentUser.logo" :src="$store.state.currentUser.logo"
+                       :lazy-src="`https://picsum.photos/10/6?image=15`" aspect-ratio="1"
                 >
                     <template v-slot:placeholder>
                         <v-row class="fill-height ma-0" align="center" justify="center">

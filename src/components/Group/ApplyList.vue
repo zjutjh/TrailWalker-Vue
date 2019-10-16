@@ -41,8 +41,8 @@
                         <h1>{{selectedUser.name}}</h1>
                         <p>{{selectedUser.id_card}}</p>
                         <div class="text-center" style="margin:1rem;">
-                            <v-btn @click="approve" style="margin-right:1rem;">同意</v-btn>
-                            <v-btn @click="refuse" style="margin-left:1rem;" color="error">拒绝</v-btn>
+                            <v-btn @click="approve" style="margin-right:1rem;">同意<v-icon right>mdi-checkbox-marked-circle</v-icon></v-btn>
+                            <v-btn @click="refuse" style="margin-left:1rem;" color="error">拒绝<v-icon right>mdi-cancel</v-icon></v-btn>
                         </div>
                     </div>
                 </v-sheet>
@@ -80,7 +80,6 @@
          */
         private async getApplyUserList() {
             const res = await postData(API(apiMap.listApply), this.listRequest);
-
             if (res.code === 1) {
                 this.confirmSheet = false;
                 this.applyUsers = res.data;
@@ -97,6 +96,7 @@
             this.$store.commit("setLoading", false);
 
             if (res.code === 1) {
+                await this.$store.dispatch("getMyGroup");
                 this.confirmSheet = false;
                 this.$store.commit("showSuccessbar", "操作成功");
             } else {
@@ -116,7 +116,6 @@
             this.$store.commit("setLoading", false);
 
             if (res.code === 1) {
-
                 this.$store.commit("showSuccessbar", "操作成功");
             } else {
                 this.$store.commit("showErrorbar", res.data);

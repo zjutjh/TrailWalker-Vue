@@ -3,17 +3,8 @@ class Rx {
     public static idCard(val: string): boolean {
         /** 检查二代身份证是否合法 */
         const reg = /^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/;
-        /** 检查护照是否合法 */
-        const reg1 = /^[a-zA-Z]{5,17}$/;
-        const reg2 = /^[a-zA-Z0-9]{5,17}$/;
-        /** 港澳通行证验证   */
-        const reg3 = /^[HMhm]{1}([0-9]{10}|[0-9]{8})$/;
-        /** 台湾通行证验证   */
-        const reg4 = /^[0-9]{8}$/;
-        const reg5 = /^[0-9]{10}$/;
 
-        // tslint:disable-next-line:max-line-length
-        if (!reg.test(val) && !reg1.test(val) && !reg2.test(val) && !reg3.test(val) && !reg4.test(val) && !reg5.test(val)) {
+        if (!reg.test(val)) {
             return false;
         }
         return true;
@@ -26,17 +17,16 @@ class Rx {
         }
         return true;
     }
-
-    public static sid(val: string): boolean {
-        const reg = /^[0-9a-zA-Z_]{1,}$/;
+    public static qq(val: string): boolean {
+        const reg = /^[1-9][0-9]{4,14}$/;
         if (!reg.test(val)) {
             return false;
         }
         return true;
     }
 
-    public static password(val: string): boolean {
-        const reg = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[^]{8,16}$/;
+    public static sid(val: string): boolean {
+        const reg = /^[0-9a-zA-Z_]{1,}$/;
         if (!reg.test(val)) {
             return false;
         }
@@ -76,4 +66,7 @@ const emailRules = [
     (v: string) => !!v || "需要邮箱",
     (v: string) => (v && Rx.mail(v)) || "邮箱格式不正确"
 ];
-export {nameRules, idCardRules, phoneRules, sloganRules, sidRules, emailRules};
+const qqRules = [
+    (v: string) => (v && Rx.qq(v)) || "QQ不正确"
+];
+export {nameRules, idCardRules, phoneRules, sloganRules, sidRules, emailRules, qqRules};

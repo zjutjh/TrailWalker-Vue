@@ -7,8 +7,7 @@ import {apiMap} from "@/utils/api/api";
             <v-card-title style="display:block;">
                 <v-avatar width="5rem" height="5rem" style="margin-bottom:2rem" @click="AvataaarsSheet=true">
 
-                    <v-img v-if="group.logo"
-                           :src="group.logo" alt="logo of a group"
+                    <v-img v-if="group.logo" :src="group.logo" alt="logo of a group"
                            :lazy-src="`https://picsum.photos/10/6?image=15`"
                            aspect-ratio="1"
                     >
@@ -26,9 +25,10 @@ import {apiMap} from "@/utils/api/api";
             </v-card-title>
             <v-card-text>
                 <v-form ref="form" v-model="valid">
-                    <v-text-field label="队伍名称" solo clearable v-model="group.name" :rules="nameRules"></v-text-field>
+                    <v-text-field label="队伍名称" solo clearable v-model="group.name" :rules="nameRules" prepend-icon="mdi-account-group"
+                    ></v-text-field>
                     <v-text-field label="队伍口号" solo clearable v-model="group.description"
-                                  :rules="nameRules"></v-text-field>
+                                  :rules="sloganRules" prepend-icon="mdi-bullhorn"></v-text-field>
                     <v-select
                             :items="$store.state.routes!==[]&&$store.state.routes!=={}?$store.state.routes:['屏峰小和山半程毅行', '屏峰小和山全程毅行', '朝晖京杭大运河毅行']"
                             item-text="name"
@@ -37,6 +37,7 @@ import {apiMap} from "@/utils/api/api";
                             solo
                             v-model="group.route_id"
                             :rules="[v => !!v || '需要选择路线']"
+                            prepend-icon="place"
                     ></v-select>
                     <v-slider
                             label="人数"
@@ -49,8 +50,12 @@ import {apiMap} from "@/utils/api/api";
                     ></v-slider>
                 </v-form>
                 <div class="text-center">
-                    <v-btn v-if="!isUpdate" :disabled="!valid" @click="createUpdateGroup">创建并报名</v-btn>
-                    <v-btn v-else :disabled="!valid" @click="createUpdateGroup">修改</v-btn>
+                    <v-btn v-if="!isUpdate" :disabled="!valid" @click="createUpdateGroup" color="primary">创建队伍
+                        <v-icon right>mdi-checkbox-marked-circle</v-icon>
+                    </v-btn>
+                    <v-btn v-else :disabled="!valid" @click="createUpdateGroup">修改队伍信息
+                        <v-icon dark>mdi-wrench</v-icon>
+                    </v-btn>
                 </div>
             </v-card-text>
         </v-card>
@@ -64,7 +69,7 @@ import {apiMap} from "@/utils/api/api";
     </div>
 </template>
 <script lang="ts">
-    import {nameRules} from "@/utils/rule/rules";
+    import {nameRules, sloganRules} from "@/utils/rule/rules";
     import router from "@/router";
     import Disclaimer from "@/components/Disclaimer.vue";
     import {Component, Prop, Vue} from "vue-property-decorator";
@@ -80,7 +85,7 @@ import {apiMap} from "@/utils/api/api";
         private AvataaarsSheet: boolean = false;
 
         private nameRules = nameRules;
-
+        private sloganRules = sloganRules;
         private group: IGroup = {
             name: "",
             logo: "",
@@ -118,10 +123,11 @@ import {apiMap} from "@/utils/api/api";
 
         }
 
-        private mounted() {
+        private async mounted() {
+            await this.$store.dispatch("getRoutesInfo");
             if (this.isUpdate) {
-                this.$store.dispatch("getMyGroup");
-                this.group = Object.assign({},this.$store.state.currentGroup);
+                await this.$store.dispatch("getMyGroup");
+                this.group = Object.assign({}, this.$store.state.currentGroup);
             }
         }
     }

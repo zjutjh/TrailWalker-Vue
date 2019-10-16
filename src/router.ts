@@ -26,6 +26,12 @@ export default new Router({
             component: () => import(/* webpackChunkName: "about" */ "./views/End.vue"),
         },
         {
+            path: "/Start",
+            alias: "/",
+            name: "Start",
+            component: () => import(/* webpackChunkName: "about" */ "./views/Start.vue"),
+        },
+        {
             path: "/Group",
             name: "Group",
             component: () => import(/* webpackChunkName: "about" */ "./views/Group.vue"),

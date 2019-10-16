@@ -26,23 +26,46 @@
                         <v-list-item-subtitle>{{$store.state.currentGroup.No}}</v-list-item-subtitle>
                     </v-list-item-content>
                 </v-list-item>
+                <v-list-item two-line v-else>
+                    <v-list-item-content>
+                        <v-list-item-title>队伍编号</v-list-item-title>
+                        <v-list-item-subtitle>等待分配</v-list-item-subtitle>
+                    </v-list-item-content>
+                </v-list-item>
                 <v-list-item two-line>
                     <v-list-item-content>
                         <v-list-item-title>队伍名称</v-list-item-title>
-                        <v-list-item-subtitle>{{$store.state.currentGroup.name}}</v-list-item-subtitle>
+                        <v-list-item-subtitle>
+                            <v-icon>mdi-account-group</v-icon>
+                            {{$store.state.currentGroup.name}}
+                        </v-list-item-subtitle>
                     </v-list-item-content>
                 </v-list-item>
-
+                <v-list-item>
+                    <v-list-item-content>
+                        <v-list-item-title>队长</v-list-item-title>
+                        <v-list-item-subtitle>
+                            <v-icon>mdi-account-tie</v-icon>
+                            {{$store.state.currentGroup.captain_name}}
+                        </v-list-item-subtitle>
+                    </v-list-item-content>
+                </v-list-item>
                 <v-list-item>
                     <v-list-item-content>
                         <v-list-item-title>队伍口号</v-list-item-title>
-                        <v-list-item-subtitle>{{$store.state.currentGroup.description}}</v-list-item-subtitle>
+                        <v-list-item-subtitle>
+                            <v-icon>mdi-bullhorn</v-icon>
+                            {{$store.state.currentGroup.description}}
+                        </v-list-item-subtitle>
                     </v-list-item-content>
                 </v-list-item>
                 <v-list-item>
                     <v-list-item-content>
                         <v-list-item-title>队伍路线</v-list-item-title>
-                        <v-list-item-subtitle>{{$store.state.currentGroup.route}}</v-list-item-subtitle>
+                        <v-list-item-subtitle>
+                            <v-icon>place</v-icon>
+                            {{$store.state.currentGroup.route}}
+                        </v-list-item-subtitle>
                     </v-list-item-content>
                 </v-list-item>
                 <v-list-item>
@@ -50,12 +73,13 @@
                         <v-list-item-title>队伍人员</v-list-item-title>
                     </v-list-item-content>
                 </v-list-item>
+
                 <v-layout>
                     <v-flex>
                         <v-chip link v-for="(mate, ix) in $store.state.groupMates"
                                 :key="ix"
                                 @click="chipClick(mate)"
-                                :close="$store.state.currentGroup.captain_id===$store.state.currentUser.id&&mate.id!==$store.state.currentGroup.captain_id"
+                                :close="$store.state.currentGroup.captain_id===$store.state.currentUser.id&&mate.id!==$store.state.currentGroup.captain_id&&!isEnd"
                                 @click:close="knit(mate)">
                             <v-avatar style="margin-left: -0.5rem">
                                 <v-img :src="mate.logo"></v-img>
@@ -66,18 +90,32 @@
                 </v-layout>
             </v-card-text>
             <v-card-actions v-if="!isEnd" style="display:block;">
-                <div v-if="$store.state.currentGroup.captain_id===$store.state.currentUser.id" style="margin:1rem;">
-                    <v-btn color="error" v-if="$store.state.currentGroup.is_submit===1" @click="unsubmit">取消报名</v-btn>
-                    <v-btn color="error" v-else @click="submit">报名</v-btn>
-                    <v-btn color="error" v-if="$store.state.currentGroup.is_submit!==1" @click="breakGroup">解散</v-btn>
-                    <v-btn color="error" v-if="$store.state.currentGroup.is_submit!==1"
+                <div v-if="$store.state.currentGroup.captain_id===$store.state.currentUser.id" style="margin:0.5rem;">
+                    <v-btn color="error" v-if="$store.state.currentGroup.is_submit===1" @click="unsubmit">取消提交
+                        <v-icon right>mdi-cancel</v-icon>
+                    </v-btn>
+                    <v-btn color="primary" v-else @click="submit">队伍提交
+                        <v-icon right>mdi-checkbox-marked-circle</v-icon>
+                    </v-btn>
+                    <v-btn color="error" v-if="$store.state.currentGroup.is_submit!==1" @click="breakGroup">解散
+                        <v-icon right>mdi-bank-remove</v-icon>
+                    </v-btn>
+                    <v-btn v-if="$store.state.currentGroup.is_submit!==1"
                            @click="$router.push('/Group/Update')">修改
+                        <v-icon right>mdi-wrench</v-icon>
                     </v-btn>
                 </div>
                 <div v-else>
-                    <v-btn v-if="$store.state.currentGroup.is_submit!==1" color="error" @click="leaveGroup">离开</v-btn>
+                    <v-btn v-if="$store.state.currentGroup.is_submit!=1&&!isEnd" color="error" @click="leaveGroup">离开
+                        <v-icon right>mdi-walk</v-icon>
+                    </v-btn>
                 </div>
             </v-card-actions>
+            <v-list-item>
+                <v-list-item-content>
+                    <v-list-item-subtitle color="red">只有队伍提交成功才视为成功报名精弘毅行</v-list-item-subtitle>
+                </v-list-item-content>
+            </v-list-item>
         </v-card>
         <div>
             <v-bottom-sheet v-model="MemberSheet">
@@ -91,8 +129,9 @@
                         <h2>邮箱 {{selectedMember.email}}</h2>
                         <h2>QQ {{selectedMember.qq}}</h2>
                         <h2>微信 {{selectedMember.wx_id}}</h2>
-                        <v-btn v-if="$store.state.currentGroup.is_submit!==1&&$store.state.currentGroup.captain_id===$store.state.currentUser.id&&selectedMember.id!==$store.state.currentGroup.captain_id"
-                               color="error" @click="knit(selectedMember)">提出
+                        <v-btn v-if="$store.state.currentGroup.is_submit!=1&&$store.state.currentGroup.captain_id===$store.state.currentUser.id&&selectedMember.id!==$store.state.currentGroup.captain_id&&!isEnd"
+                               color="error" @click="knit(selectedMember)">踢出
+                            <v-icon right>mdi-foot-print</v-icon>
                         </v-btn>
                     </div>
                 </v-sheet>
@@ -121,11 +160,7 @@
 
         private async getMyGroup() {
             await this.$store.dispatch("getMyGroup");
-            await this.getMyMates();
-        }
-
-        private async getMyMates() {
-           await this.$store.dispatch("getMyGroupMember");
+            await this.$store.dispatch("getMyGroupMember");
         }
 
         private async knit(user: IUser) {

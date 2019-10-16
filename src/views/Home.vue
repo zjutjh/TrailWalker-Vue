@@ -1,7 +1,9 @@
 <template>
     <div class="flex">
+
         <my-card></my-card>
-<!--            <weather class="flex-item"></weather>-->
+
+        <!--            <weather class="flex-item"></weather>-->
         <tip-card></tip-card>
         <hello-card></hello-card>
 
