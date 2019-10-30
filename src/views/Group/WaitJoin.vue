@@ -13,11 +13,9 @@
 <script lang="ts">
     import {Component, Vue} from "vue-property-decorator";
     import {API, apiMap} from "@/utils/api/api";
-
     import {postData} from "@/utils/fetch";
 
-
-    @Component({components: {}})
+    @Component
     export default class WaitJoin extends Vue {
 
         private async cancel() {
@@ -27,9 +25,10 @@
                 this.$store.commit("showErrorbar", res.data);
             } else {
                 this.$store.commit("showSuccessbar", "撤回成功");
+                await this.$store.dispatch("getMyInfo");
                 await this.$router.replace("/Group/No");
             }
-            await this.$store.dispatch("getMyInfo");
+
 
         }
 

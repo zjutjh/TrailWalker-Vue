@@ -4,19 +4,7 @@
         <v-card class="text-center">
             <v-card-title>
                 <div style="margin-left:auto;margin-right:auto;">
-                    <v-avatar width="5rem" height="5rem">
-                        <v-img
-                                :src="$store.state.currentUser.logo"
-                                :lazy-src="`https://picsum.photos/10/6?image=15`"
-                                aspect-ratio="1"
-                        >
-                            <template v-slot:placeholder>
-                                <v-row class="fill-height ma-0" align="center" justify="center">
-                                    <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
-                                </v-row>
-                            </template>
-                        </v-img>
-                    </v-avatar>
+                    <Avataaars :src="$store.state.currentUser.logo"/>
                 </div>
             </v-card-title>
             <v-card-text>
@@ -89,7 +77,11 @@
 <script lang="ts">
     import {Component, Vue} from "vue-property-decorator";
 
-    @Component
+    @Component({
+        components: {
+            Avataaars: () => import(/* webpackChunkName: "group" */"@/components/Avataaars.vue")
+        }
+    })
     export default class MyInfo extends Vue {
         private modify() {
             this.$router.push("/Me/create");

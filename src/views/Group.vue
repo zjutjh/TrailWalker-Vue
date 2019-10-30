@@ -8,12 +8,8 @@
 <script lang="ts">
 
     import {Component, Vue} from "vue-property-decorator";
-    import GroupList from "@/components/Group/GroupList.vue";
-    import ApplyList from "@/components/Group/ApplyList.vue";
-    import MyGroup from "@/components/Group/MyGroup.vue";
-    import CreateGroup from "@/components/Group/CreateGroup.vue";
 
-    @Component({components: {GroupList, MyGroup, CreateGroup, ApplyList}})
+    @Component
     export default class Group extends Vue {
         private async mounted() {
             await this.$store.dispatch("getMyInfo");

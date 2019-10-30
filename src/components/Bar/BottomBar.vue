@@ -5,8 +5,7 @@
                 :key="index"
                 :value="item.name"
                 @click="tagClicked(item.name)"
-                v-if="!($store.state.currentUser===null&&item.name==='Group')"
-        >
+                v-if="!($store.state.currentUser===null&&item.name==='Group')">
             <span>{{item.name}}</span>
             <v-icon>{{item.icon}}</v-icon>
         </v-btn>
@@ -49,5 +48,7 @@
 
     .drop {
         position: sticky;
+        padding: 0.6rem;
+        z-index: 5;
     }
 </style>

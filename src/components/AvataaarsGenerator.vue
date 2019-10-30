@@ -1,23 +1,6 @@
 <template>
     <div class="mx-auto" style="height:100%">
-        <v-avatar width="5rem" height="5rem" class="island" style="z-index:99;">
-            <v-img
-                    :src="avax"
-                    :lazy-src="`https://picsum.photos/10/6?image=${1 * 5 + 10}`"
-                    aspect-ratio="1"
-            >
-                <template v-slot:placeholder>
-                    <v-row
-                            class="fill-height ma-0"
-                            align="center"
-                            justify="center"
-                    >
-                        <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
-                    </v-row>
-                </template>
-            </v-img>
-
-        </v-avatar>
+        <Avataaars class="island" :src="avax"/>
         <v-card class="scroll drop" style="padding-top:2rem;border-radius: 30px 30px 0 0;height:100%;">
             <v-card-text>
                 <v-form>
@@ -37,7 +20,11 @@
 <script lang="ts">
     import {Component, Vue, Emit, Model} from "vue-property-decorator";
 
-    @Component
+    @Component({
+        components: {
+            Avataaars: () => import(/* webpackChunkName: "group" */"@/components/Avataaars.vue")
+        }
+    })
     export default class AvataaarsGenerator extends Vue {
         private avatarStyle = ["Circle", "Transparent"];
         private topType = ["NoHair", "Eyepatch", "Hat", "Hijab", "Turban", "WinterHat1",
@@ -55,7 +42,7 @@
         private facialHairType = ["Blank", "BeardMedium", "BeardLight", "BeardMagestic",
             "MoustacheFancy", "MoustacheMagnum"];
         private facialHairColor = ["Auburn", "Black", "Blonde", "BlondeGolden",
-            "Brown", "BrownDark", "Platinum", "Red","SilverGray"];
+            "Brown", "BrownDark", "Platinum", "Red", "SilverGray"];
         private clothType = ["BlazerShirt", "BlazerSweater", "CollarSweater", "GraphicShirt",
             "Hoodie", "Overall", "ShirtCrewNeck", "ShirtScoopNeck", "ShirtVNeck"];
         private eyeType = ["Close", "Cry", "Default", "Dizzy", "EyeRoll", "Happy", "Hearts",
@@ -81,7 +68,7 @@
 
         get avax() {
             const sc = `
-https://avataaars.io/?avatarStyle=${this.axa[0]}
+http://47.103.1.116/?avatarStyle=${this.axa[0]}
 &topType=${this.axa[1]}
 &accessoriesType=${this.axa[2]}
 &hairColor=${this.axa[3]}
@@ -113,9 +100,10 @@ https://avataaars.io/?avatarStyle=${this.axa[0]}
     .island {
         margin-left: auto;
         margin-right: auto;
-        margin-top: -5%;
+        margin-top: -10%;
         position: absolute;
         left: 0;
         right: 0;
+        z-index: 99;
     }
 </style>

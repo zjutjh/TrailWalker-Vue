@@ -4,49 +4,34 @@ import {apiMap} from "@/utils/api/api";
         <h1 v-if="!isUpdate">创建队伍</h1>
         <h1 v-else>修改队伍</h1>
         <v-card>
-            <v-card-title style="display:block;">
-                <v-avatar width="5rem" height="5rem" style="margin-bottom:2rem" @click="AvataaarsSheet=true">
-
-                    <v-img v-if="group.logo" :src="group.logo" alt="logo of a group"
-                           :lazy-src="`https://picsum.photos/10/6?image=15`"
-                           aspect-ratio="1"
-                    >
-                        <template v-slot:placeholder>
-                            <v-row
-                                    class="fill-height ma-0"
-                                    align="center"
-                                    justify="center"
-                            >
-                                <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
-                            </v-row>
-                        </template>
-                    </v-img>
-                </v-avatar>
+            <v-card-title style="display:block;" @click="AvataaarsSheet=true">
+                <Avataaars v-if="group.logo" :src="group.logo" />
             </v-card-title>
             <v-card-text>
                 <v-form ref="form" v-model="valid">
-                    <v-text-field label="队伍名称" solo clearable v-model="group.name" :rules="nameRules" prepend-icon="mdi-account-group"
+                    <v-text-field :rules="nameRules" clearable label="队伍名称" prepend-icon="mdi-account-group" solo
+                                  v-model="group.name"
                     ></v-text-field>
-                    <v-text-field label="队伍口号" solo clearable v-model="group.description"
-                                  :rules="sloganRules" prepend-icon="mdi-bullhorn"></v-text-field>
+                    <v-text-field :rules="sloganRules" clearable label="队伍口号" prepend-icon="mdi-bullhorn"
+                                  solo v-model="group.description"></v-text-field>
                     <v-select
                             :items="$store.state.routes!==[]&&$store.state.routes!=={}?$store.state.routes:['屏峰小和山半程毅行', '屏峰小和山全程毅行', '朝晖京杭大运河毅行']"
+                            :rules="[v => !!v || '需要选择路线']"
                             item-text="name"
                             item-value="id"
                             label="线路"
+                            prepend-icon="place"
                             solo
                             v-model="group.route_id"
-                            :rules="[v => !!v || '需要选择路线']"
-                            prepend-icon="place"
                     ></v-select>
                     <v-slider
+                            v-model="group.capacity"
                             label="人数"
-                            :value="group.capacity"
-                            thumb-label
-                            min="4"
                             max="6"
-                            ticks="always"
+                            min="4"
+                            :rules="[v => !!v || '需要选择人数']"
                             tick-size="4"
+                            thumb-label="always"
                     ></v-slider>
                 </v-form>
                 <div class="text-center">
@@ -71,22 +56,25 @@ import {apiMap} from "@/utils/api/api";
 <script lang="ts">
     import {nameRules, sloganRules} from "@/utils/rule/rules";
     import router from "@/router";
-    import Disclaimer from "@/components/Disclaimer.vue";
     import {Component, Prop, Vue} from "vue-property-decorator";
-
     import {API, apiMap} from "@/utils/api/api";
     import {postData} from "@/utils/fetch";
-    import AvataaarsGenerator from "@/components/AvataaarsGenerator.vue";
     import IGroup from "@/interface/IGroup";
 
-    @Component({components: {Disclaimer, AvataaarsGenerator}})
+    @Component({
+        components: {
+            Disclaimer: () => import(/* webpackChunkName: "group" */"@/components/Disclaimer.vue"),
+            AvataaarsGenerator: () => import(/* webpackChunkName: "group" */"@/components/AvataaarsGenerator.vue"),
+            Avataaars: () => import(/* webpackChunkName: "group" */"@/components/Avataaars.vue")
+        }
+    })
     export default class CreateGroup extends Vue {
 
         private AvataaarsSheet: boolean = false;
 
         private nameRules = nameRules;
         private sloganRules = sloganRules;
-        private group: IGroup = {
+        private group = {
             name: "",
             logo: "",
             id: 0,

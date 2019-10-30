@@ -1,13 +1,13 @@
 <template>
     <div v-if="applyUsers.data.length>0" class="mx-auto" style="max-width:30rem;">
         <h1>申请列表</h1>
-        <v-card >
+        <v-card>
             <v-list two-line>
                 <template v-for="(item, i) in applyUsers.data">
                     <v-divider v-if="i!==0" :key="i"></v-divider>
                     <v-list-item @click="userClicked(i)" :key="applyUsers.data.length+i">
                         <v-list-item-avatar>
-                            <v-img :src="item.logo"></v-img>
+                            <Avataaars :src="item.logo"/>
                         </v-list-item-avatar>
                         <v-list-item-content>
                             <v-list-item-title>{{item.name}}</v-list-item-title>
@@ -22,27 +22,29 @@
         </v-card>
         <div class="text-center">
             <v-pagination
-                    @input="getApplyUserList"
-                    style="margin-left:0;margin-right:0;"
-                    v-model="listRequest.page"
                     :length="applyUsers.last_page"
                     :total-visible="5"
+                    @input="getApplyUserList"
                     @next="getApplyUserList"
                     @previous="getApplyUserList"
+                    style="margin-left:0;margin-right:0;"
+                    v-model="listRequest.page"
             ></v-pagination>
         </div>
         <div>
             <v-bottom-sheet v-model="confirmSheet">
                 <v-sheet class="bottom-sheet" v-if="selectedUser != null">
                     <div class="text-center drop" style="padding:1rem;">
-                        <v-avatar class="text-center">
-                            <v-img :src="selectedUser.logo"></v-img>
-                        </v-avatar>
+                        <Avataaars :src="selectedUser.logo"/>
                         <h1>{{selectedUser.name}}</h1>
                         <p>{{selectedUser.id_card}}</p>
                         <div class="text-center" style="margin:1rem;">
-                            <v-btn @click="approve" style="margin-right:1rem;">同意<v-icon right>mdi-checkbox-marked-circle</v-icon></v-btn>
-                            <v-btn @click="refuse" style="margin-left:1rem;" color="error">拒绝<v-icon right>mdi-cancel</v-icon></v-btn>
+                            <v-btn @click="approve" style="margin-right:1rem;">同意
+                                <v-icon right>mdi-checkbox-marked-circle</v-icon>
+                            </v-btn>
+                            <v-btn @click="refuse" style="margin-left:1rem;" color="error">拒绝
+                                <v-icon right>mdi-cancel</v-icon>
+                            </v-btn>
                         </div>
                     </div>
                 </v-sheet>
@@ -58,7 +60,11 @@
     import IUser from "@/interface/IUser";
     import IListRequest from "@/interface/IListRequest";
 
-    @Component
+    @Component({
+        components: {
+            Avataaars: () => import(/* webpackChunkName: "group" */"@/components/Avataaars.vue")
+        }
+    })
     export default class ApplyList extends Vue {
 
 

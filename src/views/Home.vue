@@ -1,23 +1,21 @@
 <template>
     <div class="flex">
+        <tip-card class="flex-item mx-auto">欢迎报名精弘毅行</tip-card>
+        <my-card class="flex-item mx-auto"></my-card>
 
-        <my-card></my-card>
-
-        <!--            <weather class="flex-item"></weather>-->
-        <tip-card></tip-card>
-        <hello-card></hello-card>
-
-
+        <hello-card class="flex-item mx-auto"></hello-card>
     </div>
 </template>
 <script lang="ts">
     import {Component, Vue} from "vue-property-decorator";
-    import Weather from "@/components/Card/Weather.vue";
-    import MyCard from "@/components/Card/MyCard.vue";
-    import HelloCard from "@/components/Card/HelloCard.vue";
-    import TipCard from "@/components/Card/TipCard.vue";
 
-    @Component({components: {Weather, MyCard, HelloCard, TipCard}})
+    @Component({
+        components: {
+            MyCard: () => import(/* webpackChunkName: "home" */"@/components/Card/MyCard.vue"),
+            HelloCard: () => import(/* webpackChunkName: "home" */"@/components/Card/HelloCard.vue"),
+            TipCard: () => import(/* webpackChunkName: "home" */"@/components/Card/TipCard.vue"),
+        }
+    })
     export default class Home extends Vue {
         private async mounted() {
             await this.$store.dispatch("getMyInfo");

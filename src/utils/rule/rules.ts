@@ -9,13 +9,16 @@ class Rx {
         }
         return true;
     }
+
     public static height(val: string): boolean {
         const reg = /^[1-9][0-9]{2,3}$/;
-        if (!reg.test(val)||val>'250'||val<'50') {
+        // tslint:disable-next-line:radix
+        if (!reg.test(val) || parseInt(val) > 250 || parseInt(val) < 50) {
             return false;
         }
         return true;
     }
+
     public static mobilePhone(val: string): boolean {
         const reg = /^1(3|4|5|6|7|8|9)\d{9}$/;
         if (!reg.test(val)) {
@@ -23,6 +26,7 @@ class Rx {
         }
         return true;
     }
+
     public static qq(val: string): boolean {
         const reg = /^[1-9][0-9]{4,14}$/;
         if (!reg.test(val)) {

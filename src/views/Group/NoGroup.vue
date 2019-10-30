@@ -7,10 +7,13 @@
 <script lang="ts">
 
     import {Component, Vue} from "vue-property-decorator";
-    import GroupList from "@/components/Group/GroupList.vue";
-    import CreateGroup from "@/components/Group/CreateGroup.vue";
 
-    @Component({components: {GroupList, CreateGroup}})
+    @Component({
+        components: {
+            GroupList: () => import(/* webpackChunkName: "group" */"@/components/Group/GroupList.vue"),
+            CreateGroup: () => import(/* webpackChunkName: "group" */"@/components/Group/CreateGroup.vue")
+        }
+    })
     export default class NoGroup extends Vue {
     }
 </script>

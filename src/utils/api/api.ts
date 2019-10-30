@@ -1,7 +1,7 @@
 const env = process.env ? process.env.NODE_ENV : "production";
 const host = process.env.DEV_HOST || "localhost";
 const devPort = process.env.DEV_PORT || "80";
-const devUrl = `http://${host}:${devPort}`;
+const devUrl = `http://localhost`;
 const serverUrl = "http://walk.zjutjh.com";
 
 enum apiMap {
@@ -24,8 +24,6 @@ enum apiMap {
     unsubmitGroup = "/group/unsubmit",
     listGroupMembers = "/group/members/list",
     deleteGroupMember = "/group/members/delete",
-
-
     listApply = "/apply/list",
     doApply = "/apply/do",
     deleteApply = "/apply/delete",

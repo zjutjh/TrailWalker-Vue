@@ -6,9 +6,12 @@
 <script lang="ts">
 
     import {Component, Vue} from "vue-property-decorator";
-    import CreateGroup from "@/components/Group/CreateGroup.vue";
 
-    @Component({components: {CreateGroup}})
+    @Component({
+        components: {
+            CreateGroup: () => import(/* webpackChunkName: "group" */"@/components/Group/CreateGroup.vue")
+        }
+    })
     export default class UpdateGroup extends Vue {
     }
 </script>

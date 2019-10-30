@@ -33,10 +33,10 @@
 
     @Component({components: {BottomBar, HeaderBar}})
     export default class App extends Vue {
+        private isOriginHei = true;
+        private documentHeight = document.documentElement.clientHeight;
+
         private async created() {
-
-            alert("当前系统测试中，不是正式报名，报名无效。");
-
             await this.$store.dispatch("getSystemInfo");
             if (this.$store.state.systemInfo.state === -1) {
                 await this.$router.replace("/Start");
@@ -51,15 +51,17 @@
                 } else {
                     await this.$store.dispatch("showLoading");
                     const res = await postData(API(apiMap.login), {code: codex});
-                    await this.$store.dispatch("closeLoading");
+
                     if (res.code === 1) {
                         await this.$store.dispatch("getMyInfo");
-                        this.$store.commit("showSuccessbar", "微信登录成功");
+                        await this.$store.dispatch("closeLoading");
                         if (this.$store.state.systemInfo.state === 0) {
                             await this.$store.dispatch("getMyGroup");
                             await this.$store.dispatch("getMyGroupMember");
                             await this.$router.replace("/End");
                         }
+
+                        this.$store.commit("showSuccessbar", "微信登录成功");
 
                     } else {
                         window.location.replace(API(apiMap.wxLogin));
@@ -68,20 +70,12 @@
             } catch {
                 window.location.replace(API(apiMap.wxLogin));
             }
-
-
         }
 
-        private isOriginHei = true; //显示或者隐藏button
-        private documentHeight = document.documentElement.clientHeight;  //默认屏幕高度
         private mounted() {
             window.onresize = () => {
                 return (() => {
-                    if (this.documentHeight > document.documentElement.clientHeight) {
-                        this.isOriginHei = false;
-                    } else {
-                        this.isOriginHei = true;
-                    }
+                    this.isOriginHei = this.documentHeight <= document.documentElement.clientHeight;
                 })();
             };
         }
@@ -150,3 +144,62 @@
         height: auto;
     }
 </style>
+<style lang="scss">
+    .dis-container {
+        text-align: left;
+        display: flex;
+        flex-direction: column;
+        padding: 1rem 0rem;
+        overflow: auto;
+        height: 100%;
+
+        header {
+            .head-bk {
+                height: 2.3rem;
+                line-height: 3rem;
+                text-align: center;
+                background-size: cover;
+                margin: 0 auto;
+                font-weight: bold;
+                font-size: 2rem;
+                color: #877878;
+            }
+        }
+
+        .d-content {
+            border-radius: 0.4rem;
+            padding: 0.5rem;
+
+            h1 {
+                text-align: center;
+                font-weight: bold;
+                font-size: 1.5rem;
+                color: #bd7a6e;
+                margin-bottom: 2rem;
+            }
+
+            h2 {
+                text-align: left;
+                font-size: 1.2rem;
+                font-weight: bold;
+                color: #bd7a6e;
+            }
+
+            p {
+                font-size: 1rem;
+                color: #5a5875;
+                margin-top: 0.2rem;
+            }
+        }
+
+        .dis-btn {
+            height: 4.6rem;
+            line-height: 4.6rem;
+            color: #ffffff;
+            font-size: 1.2rem;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+    }
+</style>
+

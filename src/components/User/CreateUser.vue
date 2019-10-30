@@ -1,105 +1,131 @@
 <template>
     <div class="flex-item mx-auto" style="max-width:30rem;">
-        <h1>报名</h1>
-        <v-card class="text-center">
+        <h1>注册</h1>
+        <v-card-title style="display:block;" @click="showAVE">
+            <Avataaars v-if="user.logo" :src="user.logo"/>
+        </v-card-title>
 
-            <v-card-title style="display:block;">
-                <v-avatar width="5rem" height="5rem" style="margin-bottom:2rem" @click="showAVE">
-                    <img v-if="user.logo" :src="user.logo" alt=""/>
-                </v-avatar>
-            </v-card-title>
-            <v-card-text>
-                <v-form ref="form" v-model="valid">
-                    <v-text-field label="姓名" solo clearable v-model="user.name" :rules="nameRules"
-                                  prepend-icon="mdi-account"></v-text-field>
-                    <v-text-field label="身份证" solo clearable v-model="user.id_card" :rules="idCardRules"
-                                  prepend-icon="mdi-account-badge"
-                                  @focus="idCard2=''" hint="出发前我们会根据身份证核对个人信息"></v-text-field>
-                    <v-text-field label="重复身份证" solo clearable v-model="idCard2" prepend-icon="mdi-account-badge"
-                                  :rules="[v => !!v&&user.id_card===idCard2 || '身份证不匹配']"></v-text-field>
-                    <v-text-field label="手机号" solo clearable v-model="user.phone" :rules="phoneRules"
-                                  prepend-icon="mdi-contact-phone"></v-text-field>
-                    <v-select
-                            :items="identity"
-                            label="身份"
-                            solo
-                            v-model="user.identity"
-                            prepend-icon="mdi-account-badge-horizontal"
-                            :rules="[v => !!v || '需要选择身份']"
-                    ></v-select>
-                    <v-select
-                            v-if="user.identity==='学生'"
-                            :items="school"
-                            label="学院"
-                            solo
-                            v-model="user.school"
-                            prepend-icon="mdi-school"
-                            :rules="[v => !!v || '需要选择学院']"
-                    ></v-select>
-                    <v-text-field label="学号" solo clearable v-if="user.identity==='学生'"
-                                  v-model="user.sid" :rules="sidRules"></v-text-field>
-                    <v-select
-                            v-if="user.identity==='学生'"
-                            :items="campus"
-                            label="校区"
-                            solo
-                            v-model="user.campus"
-                            prepend-icon="mdi-school"
-                            :rules="[v => !!v || '需要选择校区']"
-                    ></v-select>
-                    <v-text-field label="  QQ  " solo clearable v-model="user.qq" prepend-icon="mdi-qqchat"
-                                  :rules="QQRules"></v-text-field>
-                    <v-text-field label="身高" solo clearable v-model="user.height" suffix="cm"
-                                  prepend-icon="mdi-human-male-height"
-                                  :rules="heightRules"></v-text-field>
-                    <v-text-field label="邮箱" solo clearable v-model="user.email" :rules="mailRules"
-                                  prepend-icon="mdi-email"></v-text-field>
-                    <v-text-field solo clearable v-model="user.wx_id" prepend-icon="mdi-wechat">
-                        <template v-slot:label>
-                            <div>
-                                微信号<small>(可选)</small>
-                            </div>
-                        </template>
-                    </v-text-field>
-                </v-form>
-                <div class="text-center">
-                    <v-btn v-if="!isUpdate" :disabled="!valid" @click="sheet = true" color="primary">注册
-                        <v-icon dark right>mdi-checkbox-marked-circle</v-icon>
-                    </v-btn>
-                    <v-btn v-else :disabled="!valid" @click="sheet = true">修改
-                        <v-icon dark>mdi-wrench</v-icon>
-                    </v-btn>
-                </div>
-            </v-card-text>
-            <v-bottom-sheet v-model="sheet" scrollable>
-                <v-sheet class="text-center bottom-sheet scroll">
-                    <disclaimer class="text-center" @agree="createOrUpdate"></disclaimer>
-                </v-sheet>
-            </v-bottom-sheet>
-            <v-bottom-sheet v-model="sheet2" scrollable>
-                <v-sheet class="text-center bottom-sheet">
-                    <AvataaarsGenerator v-model="user.logo"></AvataaarsGenerator>
-                </v-sheet>
-            </v-bottom-sheet>
-            <AvataaarsGenerator v-if="!user.logo" v-model="user.logo"></AvataaarsGenerator>
-        </v-card>
+        <v-form ref="form" v-model="valid">
+
+            <v-expansion-panels multiple popout v-model="ExpansionPanel">
+                <v-expansion-panel>
+                    <v-expansion-panel-header>基本信息</v-expansion-panel-header>
+                    <v-expansion-panel-content>
+                        <v-text-field :rules="nameRules" clearable label="姓名" prepend-icon="mdi-account" solo
+                                      v-model="user.name"></v-text-field>
+                        <v-text-field :rules="idCardRules" @focus="idCard2=''" clearable
+                                      hint="出发前我们会根据身份证核对个人信息"
+                                      label="身份证"
+                                      prepend-icon="mdi-account-badge" solo
+                                      v-model="user.id_card"></v-text-field>
+                        <v-text-field :rules="[v => !!v&&user.id_card===idCard2 || '身份证不匹配']" clearable
+                                      label="重复身份证"
+                                      prepend-icon="mdi-account-badge" solo
+                                      v-model="idCard2"></v-text-field>
+                        <v-text-field :rules="phoneRules" clearable hint="请填写正确的手机号,方便我们和您的队友联系" label="手机号"
+                                      prepend-icon="mdi-contact-phone"
+                                      solo v-model="user.phone"></v-text-field>
+                        <v-text-field :rules="heightRules" clearable label="身高"
+                                      prepend-icon="mdi-human-male-height" solo
+                                      suffix="cm"
+                                      v-model="user.height"></v-text-field>
+                        <v-select
+                                :items="identity"
+                                :rules="[v => !!v || '需要选择身份']"
+                                label="身份"
+                                prepend-icon="mdi-account-badge-horizontal"
+                                solo
+                                @change="identityChange"
+                                v-model="user.identity"
+                        ></v-select>
+                    </v-expansion-panel-content>
+                </v-expansion-panel>
+
+                <v-expansion-panel>
+                    <v-expansion-panel-header>联系信息</v-expansion-panel-header>
+                    <v-expansion-panel-content>
+                        <v-text-field :rules="QQRules" clearable label="  QQ  " prepend-icon="mdi-qqchat" solo
+                                      v-model="user.qq"></v-text-field>
+                        <v-text-field :rules="mailRules" clearable label="邮箱" prepend-icon="mdi-email" solo
+                                      v-model="user.email"></v-text-field>
+                        <v-text-field clearable prepend-icon="mdi-wechat" solo v-model="user.wx_id">
+                            <template v-slot:label>
+                                <div>
+                                    微信号<small>(可选)</small>
+                                </div>
+                            </template>
+                        </v-text-field>
+                    </v-expansion-panel-content>
+                </v-expansion-panel>
+
+                <v-expansion-panel v-show="user.identity==='学生'">
+                    <v-expansion-panel-header>学生信息</v-expansion-panel-header>
+                    <v-expansion-panel-content>
+                        <v-select
+                                :items="school"
+                                :rules="[v => !!v || '需要选择学院']"
+                                label="学院"
+                                prepend-icon="mdi-school"
+                                solo
+                                v-if="user.identity==='学生'"
+                                v-model="user.school"
+                        ></v-select>
+                        <v-text-field :rules="sidRules" clearable label="学号" solo prepend-icon="mdi-identifier"
+                                      v-if="user.identity==='学生'" v-model="user.sid"></v-text-field>
+                        <v-select
+                                :items="campus"
+                                :rules="[v => !!v || '需要选择校区']"
+                                label="校区"
+                                prepend-icon="mdi-home-city"
+                                solo
+                                v-if="user.identity==='学生'"
+                                v-model="user.campus"
+                        ></v-select>
+                    </v-expansion-panel-content>
+                </v-expansion-panel>
+            </v-expansion-panels>
+        </v-form>
+
+        <div class="text-center" style="margin-top: 1rem;">
+            <v-btn :disabled="!valid" @click="sheet = true" color="primary" v-if="!isUpdate">注册
+                <v-icon dark right>mdi-checkbox-marked-circle</v-icon>
+            </v-btn>
+            <v-btn :disabled="!valid" @click="sheet = true" v-else>修改
+                <v-icon dark>mdi-wrench</v-icon>
+            </v-btn>
+        </div>
+
+        <v-bottom-sheet v-model="sheet" scrollable>
+            <v-sheet class="text-center bottom-sheet scroll">
+                <disclaimer class="text-center" @agree="createOrUpdate"></disclaimer>
+            </v-sheet>
+        </v-bottom-sheet>
+        <v-bottom-sheet v-model="sheet2" scrollable>
+            <v-sheet class="text-center bottom-sheet">
+                <AvataaarsGenerator v-model="user.logo"></AvataaarsGenerator>
+            </v-sheet>
+        </v-bottom-sheet>
+        <AvataaarsGenerator v-if="!user.logo" v-model="user.logo"></AvataaarsGenerator>
     </div>
-
-
 </template>
 <script lang="ts">
     import {idCardRules, phoneRules, nameRules, sidRules, emailRules, qqRules, heightRules} from "@/utils/rule/rules";
     import {Component, Vue} from "vue-property-decorator";
-    import Disclaimer from "@/components/Disclaimer.vue";
-    import AvataaarsGenerator from "@/components/AvataaarsGenerator.vue";
-
     import {API, apiMap} from "@/utils/api/api";
     import {postData} from "@/utils/fetch";
 
-    @Component({components: {Disclaimer, AvataaarsGenerator}})
+    @Component({
+        components: {
+            Disclaimer: () => import(/* webpackChunkName: "group" */"@/components/Disclaimer.vue"),
+            AvataaarsGenerator: () => import(/* webpackChunkName: "group" */"@/components/AvataaarsGenerator.vue"),
+            Avataaars: () => import(/* webpackChunkName: "group" */"@/components/Avataaars.vue")
+        }
+    })
     export default class CreateUser extends Vue {
 
         private isUpdate = false;
+
+        private ExpansionPanel = [0, 1, 2];
 
         private school = ["化学工程学院",
             "药学院、协同创新中心",
@@ -137,10 +163,10 @@
         private mailRules = emailRules;
         private QQRules = qqRules;
         private heightRules = heightRules;
-        private user: any = {};
         private valid: boolean = false;
 
         private idCard2 = "";
+        private user: any = {};
 
         private async createOrUpdate() {
             this.sheet = false;
@@ -151,9 +177,15 @@
             if (res.code === 1) {
                 await this.$router.replace("/Home");
                 await this.$store.dispatch("getMyInfo");
-                this.$store.commit("showSuccessbar", "成功");
+                this.$store.commit("showSuccessbar", "创建用户成功");
             } else {
                 this.$store.commit("showErrorbar", res.data);
+            }
+        }
+
+        private identityChange() {
+            if (this.user.identity === "学生") {
+                this.ExpansionPanel.push(2);
             }
         }
 
