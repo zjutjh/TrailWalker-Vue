@@ -26,6 +26,12 @@ export default new Router({
             component: () => import(/* webpackChunkName: "about" */ "./views/End.vue"),
         },
         {
+            path: "/Refuse",
+            alias: "/",
+            name: "Refuse",
+            component: () => import(/* webpackChunkName: "about" */ "./views/Refuse.vue"),
+        },
+        {
             path: "/Start",
             alias: "/",
             name: "Start",

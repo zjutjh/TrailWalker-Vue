@@ -62,9 +62,13 @@
                         }
 
                         this.$store.commit("showSuccessbar", "微信登录成功");
-
-                    } else {
+                    } else if (res.code === 0) {
                         window.location.replace(API(apiMap.wxLogin));
+                    } else {
+                        this.$store.commit("showErrorbar", res.data);
+                        await this.$store.dispatch("closeLoading");
+                        await this.$router.replace("/Refuse");
+                        return;
                     }
                 }
             } catch {

@@ -13,13 +13,37 @@
                     <v-expansion-panel-content>
                         <v-text-field :rules="nameRules" clearable label="姓名" prepend-icon="mdi-account" solo
                                       v-model="user.name"></v-text-field>
-                        <v-text-field :rules="idCardRules" @focus="idCard2=''" clearable
-                                      hint="出发前我们会根据身份证核对个人信息"
+                        <v-select
+                                :items="idTypes"
+                                :rules="[v => !!v || '需要选择证件类型']"
+                                label="证件类型"
+                                prepend-icon="mdi-account-badge-horizontal"
+                                solo
+                                @change="identityChange"
+                                v-model="idType">
+                        </v-select>
+                        <v-text-field v-if="idType==='身份证'" :rules="idCardRules" @focus="idCard2=''" clearable
+                                      hint="出发前我们会根据身份证号核对个人信息"
                                       label="身份证"
                                       prepend-icon="mdi-account-badge" solo
                                       v-model="user.id_card"></v-text-field>
-                        <v-text-field :rules="[v => !!v&&user.id_card===idCard2 || '身份证不匹配']" clearable
-                                      label="重复身份证"
+                        <v-text-field v-if="idType==='台湾'" :rules="taiwanRules" @focus="idCard2=''" clearable
+                                      hint="出发前我们会根据身份证号核对个人信息"
+                                      label="身份证"
+                                      prepend-icon="mdi-account-badge" solo
+                                      v-model="user.id_card"></v-text-field>
+                        <v-text-field v-if="idType==='港澳'" :rules="hangkongRules" @focus="idCard2=''" clearable
+                                      hint="出发前我们会根据身份证号核对个人信息"
+                                      label="身份证"
+                                      prepend-icon="mdi-account-badge" solo
+                                      v-model="user.id_card"></v-text-field>
+                        <v-text-field v-if="idType==='护照'" :rules="passportRules" @focus="idCard2=''" clearable
+                                      hint="出发前我们会根据护照号核对个人信息"
+                                      label="护照"
+                                      prepend-icon="mdi-account-badge" solo
+                                      v-model="user.id_card"></v-text-field>
+                        <v-text-field :rules="[v => !!v&&user.id_card===idCard2 || '证件不匹配']" clearable
+                                      label="重复证件号"
                                       prepend-icon="mdi-account-badge" solo
                                       v-model="idCard2"></v-text-field>
                         <v-text-field :rules="phoneRules" clearable hint="请填写正确的手机号,方便我们和您的队友联系" label="手机号"
@@ -109,7 +133,18 @@
     </div>
 </template>
 <script lang="ts">
-    import {idCardRules, phoneRules, nameRules, sidRules, emailRules, qqRules, heightRules} from "@/utils/rule/rules";
+    import {
+        idCardRules,
+        phoneRules,
+        nameRules,
+        sidRules,
+        emailRules,
+        qqRules,
+        heightRules,
+        passportRules,
+        taiwanRules,
+        hangkongRules
+    } from "@/utils/rule/rules";
     import {Component, Vue} from "vue-property-decorator";
     import {API, apiMap} from "@/utils/api/api";
     import {postData} from "@/utils/fetch";
@@ -123,6 +158,9 @@
     })
     export default class CreateUser extends Vue {
 
+        private idType = "身份证";
+
+        private idTypes = ["身份证","护照","台湾","港澳"];
         private isUpdate = false;
 
         private ExpansionPanel = [0, 1, 2];
@@ -160,6 +198,10 @@
         private phoneRules = phoneRules;
         private nameRules = nameRules;
         private sidRules = sidRules;
+        private passportRules = passportRules;
+        private taiwanRules = taiwanRules;
+        private hangkongRules = hangkongRules;
+
         private mailRules = emailRules;
         private QQRules = qqRules;
         private heightRules = heightRules;

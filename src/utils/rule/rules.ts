@@ -10,6 +10,33 @@ class Rx {
         return true;
     }
 
+    public static hangkong(val: string): boolean {
+        const reg2 = /^([A-Z]\d{6,10}(\(\w{1}\))?)$/;
+
+        if (!reg2.test(val)) {
+            return false;
+        }
+        return true;
+    }
+
+    public static taiwan(val: string): boolean {
+        const reg = /^\d{8}|^[a-zA-Z0-9]{10}|^\d{18}$/;
+
+        if (!reg.test(val)) {
+            return false;
+        }
+        return true;
+    }
+
+    public static passport(val: string): boolean {
+        const reg = / ^1[45][0-9]{7}$|([P|p|S|s]\d{7}$)|([S|s|G|g|E|e]\d{8}$)|([Gg|Tt|Ss|Ll|Qq|Dd|Aa|Ff]\d{8}$)|([H|h|M|m]\d{8,10})$/;
+
+        if (!reg.test(val)) {
+            return false;
+        }
+        return true;
+    }
+
     public static height(val: string): boolean {
         const reg = /^[1-9][0-9]{2,3}$/;
         // tslint:disable-next-line:radix
@@ -64,6 +91,18 @@ const idCardRules = [
     (v: string) => !!v || "需要身份证号",
     (v: string) => (v && Rx.idCard(v)) || "身份证号格式不正确"
 ];
+const hangkongRules = [
+    (v: string) => (v && Rx.hangkong(v)) || "请输入正确的港澳身份证"
+];
+const taiwanRules = [
+    (v: string) => (v && Rx.hangkong(v)) || "请输入正确的台湾身份证"
+];
+const passportRules = [
+    (v: string) => (v && Rx.passport(v)) || "请输入正确的护照"
+];
+const heightRules = [
+    (v: string) => (v && Rx.height(v)) || "请输入正确的身高"
+];
 const sidRules = [
     (v: string) => !!v || "需要学号",
     (v: string) => (v && Rx.sid(v)) || "错误的学号"
@@ -79,7 +118,17 @@ const emailRules = [
 const qqRules = [
     (v: string) => (v && Rx.qq(v)) || "QQ不正确"
 ];
-const heightRules = [
-    (v: string) => (v && Rx.height(v)) || "请输入正确的身高"
-];
-export {nameRules, idCardRules, phoneRules, sloganRules, sidRules, emailRules, qqRules, heightRules};
+
+export {
+    nameRules,
+    idCardRules,
+    passportRules,
+    taiwanRules,
+    hangkongRules,
+    phoneRules,
+    sloganRules,
+    sidRules,
+    emailRules,
+    qqRules,
+    heightRules
+};
