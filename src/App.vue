@@ -3,7 +3,7 @@
 
         <header-bar></header-bar>
         <v-content class="content">
-            <v-snackbar v-model="$store.state.snackbar.isShow" top :color="$store.state.snackbar.color">
+            <v-snackbar v-model="$store.state.snackbar.isShow" bottom absolute :color="$store.state.snackbar.color" style="margin-bottom: 30vh">
                 {{ $store.state.snackbar.text }}
                 <v-btn color="white" text @click="$store.state.snackbar.isShow = false"> Close</v-btn>
             </v-snackbar>
@@ -13,7 +13,7 @@
         </v-content>
         <bottom-bar v-if="$store.state.systemInfo.state === 1&&isOriginHei"></bottom-bar>
 
-        <v-overlay :value="$store.state.isLoading" style="z-index: 99999">
+        <v-overlay v-show="$store.state.isLoading" :value="$store.state.isLoading" style="z-index: 99999;backdrop-filter: blur(10px)">
             <v-progress-circular
                     :size="50"
                     color="primary"

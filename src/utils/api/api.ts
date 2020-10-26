@@ -2,7 +2,7 @@ const env = process.env ? process.env.NODE_ENV : "production";
 const host = process.env.DEV_HOST || "localhost";
 const devPort = process.env.DEV_PORT || "80";
 const devUrl = `http://localhost`;
-const serverUrl = "http://walk.zjutjh.com";
+const serverUrl = '';
 
 enum apiMap {
     systemInfo = "/index/info",
