@@ -9,7 +9,7 @@ function isPromise(ret: { then: any; catch: any; }) {
 }
 
 const errorHandler = (error: any, vm: any, info: any) => {
-
+    console.error(error);
 };
 
 function registerActionHandle(actions: { [x: string]: (...args: any[]) => any; }) {
@@ -51,14 +51,15 @@ const registerVue = (instance: { $options: { methods: {}; }; }) => {
 const GlobalError = {
     // tslint:disable-next-line:no-shadowed-variable
     install: (Vue: {
-        config: {
-            errorHandler: (error: any, vm: any, info: any) => void;
-        };
-        mixin: (arg0: { beforeCreate(): void; }) => void;
-        prototype: {
-            $throw: (error: any, vm: any, info: any) => void;
-        };
-    }, options: any) => {
+                  config: {
+                      errorHandler: (error: any, vm: any, info: any) => void;
+                  };
+                  mixin: (arg0: { beforeCreate(): void; }) => void;
+                  prototype: {
+                      $throw: (error: any, vm: any, info: any) => void;
+                  };
+              },
+              options: any) => {
         /**
          * 全局异常处理
          * @param {

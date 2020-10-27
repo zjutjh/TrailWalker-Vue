@@ -9,7 +9,7 @@
 
     @Component({
         components: {
-            CreateGroup: () => import(/* webpackChunkName: "group" */"@/components/Group/CreateGroup.vue")
+            CreateGroup: () => import("@/components/Group/CreateGroup.vue")
         }
     })
     export default class UpdateGroup extends Vue {

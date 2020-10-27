@@ -1,7 +1,7 @@
 export default interface IUser {
     id?: number;
     openid: string;
-    campus: "朝晖"|"屏峰";
+    campus: "朝晖"|"屏峰"|"莫干山";
     identity: "教职工" | "学生" | "校友" | "其他";
     name: string;
     height: number;

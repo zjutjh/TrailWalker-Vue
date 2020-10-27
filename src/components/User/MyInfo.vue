@@ -1,7 +1,7 @@
 <template>
     <div v-if="$store.state.currentUser" class="flex-item mx-auto" style="max-width:30rem;">
         <h1>我</h1>
-        <v-card class="text-center">
+        <v-card class="text-center" raised rounded="xl">
             <v-card-title>
                 <div style="margin-left:auto;margin-right:auto;">
                     <Avataaars :src="$store.state.currentUser.logo"/>

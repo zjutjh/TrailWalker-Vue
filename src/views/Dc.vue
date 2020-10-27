@@ -6,7 +6,7 @@
 
     @Component({
         components: {
-            Disclaimer: () => import(/* webpackChunkName: "group" */"@/components/Disclaimer.vue"),
+            Disclaimer: () => import("@/components/Disclaimer.vue"),
         }
     })
     export default class Dc extends Vue {

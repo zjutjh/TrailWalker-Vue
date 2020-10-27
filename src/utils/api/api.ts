@@ -1,8 +1,8 @@
 const env = process.env ? process.env.NODE_ENV : "production";
 const host = process.env.DEV_HOST || "localhost";
 const devPort = process.env.DEV_PORT || "80";
-const devUrl = `http://localhost`;
-const serverUrl = '';
+const devUrl = `http://walk.jh.zjutjh.com`;
+const serverUrl = `http://walk.jh.zjutjh.com`;
 
 enum apiMap {
     systemInfo = "/index/info",
@@ -30,6 +30,7 @@ enum apiMap {
     countApply = "/apply/count",
     agreeApply = "/apply/agree",
     refuseApply = "/apply/refuse",
+    doMatchingApply = "/apply/matching",
 
     listRoutes = "/route/list"
 

@@ -32,10 +32,10 @@ export default new Router({
             component: () => import(/* webpackChunkName: "about" */ "./views/Refuse.vue"),
         },
         {
-            path: "/Start",
+            path: "/NotStart",
             alias: "/",
-            name: "Start",
-            component: () => import(/* webpackChunkName: "about" */ "./views/Start.vue"),
+            name: "NotStart.vue",
+            component: () => import(/* webpackChunkName: "about" */ "./views/NotStart.vue"),
         },
         {
             path: "/Group",

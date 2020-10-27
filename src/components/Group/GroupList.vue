@@ -1,8 +1,8 @@
 <template>
     <div class="mx-auto">
         <h1>加入队伍</h1>
-        <v-text-field  max-width="25rem" label="搜索" solo clearable v-model="listRequest.query_string" @keydown="query"></v-text-field>
-        <v-card max-width="25rem">
+        <v-text-field  max-width="25rem"   label="搜索" solo clearable raised rounded v-model="listRequest.query_string" @keydown="query"></v-text-field>
+        <v-card  min-height="2rem" rounded="xl" raised style="margin: 1rem;padding: 1rem;">
             <v-list two-line v-if="groups.data.length>0">
                 <template v-for="(item, i) in groups.data">
                     <v-divider v-if="i!==0" :key="i"></v-divider>
@@ -27,7 +27,7 @@
                     </v-list-item>
                 </template>
             </v-list>
-            <span v-else class="v-list-item__subtitle" style="margin-top: -0.5rem;">没有更多了</span>
+            <span v-else class="v-list-item__subtitle" style="padding: 1rem">没有更多了</span>
         </v-card>
         <div class="text-center">
             <v-pagination

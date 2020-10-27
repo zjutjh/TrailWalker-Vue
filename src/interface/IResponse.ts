@@ -1,5 +1,5 @@
 export default interface IResponse {
-    code: number;
-    msg: string;
+    code: number|undefined;
+    msg: string|undefined;
     data: any;
 }

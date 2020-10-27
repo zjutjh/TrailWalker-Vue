@@ -1,5 +1,5 @@
 <template>
-    <v-card max-width="25rem" elevation="4">
+    <v-card max-width="25rem" elevation="10" rounded="xl">
 
 
         <v-carousel height="14rem" cycle hide-delimiter-background show-arrows-on-hover>
@@ -16,7 +16,7 @@
         </v-card-title>
         <v-card-actions>
             <v-btn text color="purple" @click="$router.push('/dis')">报名须知</v-btn>
-            <v-btn text color="red" @click="goQQ"> 官方QQ群</v-btn>
+            <v-btn text color="red" @click="goQQGroup"> 官方QQ群</v-btn>
             <v-spacer></v-spacer>
             <v-btn icon @click="show = !show">
                 <v-icon>{{ show ? 'keyboard_arrow_down' : 'keyboard_arrow_up' }}</v-icon>
@@ -47,7 +47,7 @@
         private show = false;
         private images = ["/img/1.jpg", "/img/2.jpg", "/img/3.jpg", "/img/4.jpg", "/img/7.jpg", "/img/6.jpg", "/img/8.jpg"];
 
-        private goQQ() {
+        private goQQGroup() {
             window.location.replace("https://qm.qq.com/cgi-bin/qm/qr?k=xpNtRLoNyfqfK6YEGpR8Aa0iFfsrODQ5&authKey=JMzGTNaUe5rHM112%2FWkvPEECEF4zzfbWOxQzh7KsBu5brex%2Fh7cSmg%3D%3D");
         }
     }

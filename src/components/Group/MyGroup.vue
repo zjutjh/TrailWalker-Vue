@@ -1,11 +1,11 @@
 <template>
     <div v-if="$store.state.currentGroup" class="mx-auto" style="max-width:30rem;">
         <h1>我的队伍</h1>
-        <v-card v-if="(!$store.state.currentGroup||$store.state.currentGroup.is_submit!==1)&&isEnd">
+        <v-card v-if="(!$store.state.currentGroup||$store.state.currentGroup.is_submit!==1)&&isEnd" raised rounded="xl">
             <v-card-title>很遗憾你没有报名成功</v-card-title>
             <v-card-text>你的队伍没有成功提交</v-card-text>
         </v-card>
-        <v-card v-else class="text-center">
+        <v-card v-else class="text-center" raised rounded="xl">
             <v-card-title>
                 <div style="margin-left:auto;margin-right:auto;">
                     <Avataaars v-if="$store.state.currentGroup" :src="$store.state.currentGroup.logo"/>
@@ -132,7 +132,7 @@
             </v-bottom-sheet>
         </div>
         <v-dialog v-model="breakConfirm" persistent max-width="290">
-            <v-card>
+            <v-card raised rounded="xl">
                 <v-card-title class="headline">确定要解散队伍吗？</v-card-title>
                 <v-card-text>没有队伍，你将无法参加精弘毅行</v-card-text>
                 <v-card-actions>
@@ -143,7 +143,7 @@
             </v-card>
         </v-dialog>
         <v-dialog v-model="knitConfirm" persistent max-width="290">
-            <v-card v-if="selectedMember">
+            <v-card v-if="selectedMember" raised rounded="xl">
                 <v-card-title class="headline">确定要踢{{selectedMember.name}}吗？</v-card-title>
                 <v-card-text>队伍人数不足可能无法参加本次活动</v-card-text>
                 <v-card-actions>

@@ -22,7 +22,7 @@
 
         @Prop({
             type: Number,
-            default: 64})
+            default: 96})
         private size?: string;
     }
 

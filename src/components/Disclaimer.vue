@@ -49,7 +49,7 @@
         <v-layout justify-center style="margin-bottom:1rem;" v-if="agreeable">
             <v-dialog max-width="290" persistent v-model="dialog">
                 <template v-slot:activator="{ on }">
-                    <v-btn color="primary" @click="showDialog" style="margin-bottom: 1rem;">{{timeOut}}</v-btn>
+                    <v-btn color="primary" @click="showDialog" style="margin-bottom: 1rem;">{{timeOut>=0?timeOut:'同意'}}</v-btn>
                 </template>
                 <v-card>
                     <v-card-title class="headline">是否同意声明</v-card-title>
@@ -70,7 +70,9 @@
     @Component
     export default class Disclaimer extends Vue {
         private dialog = false;
-        private timeOut: string | number = 30;
+
+        @Prop({type: Number, default: 30})
+        private timeOut: number = 30;
 
         @Prop({type: Boolean, default: true})
         private agreeable?: boolean;
@@ -81,7 +83,7 @@
         }
 
         private showDialog() {
-            if (this.timeOut === "同意") {
+            if (this.timeOut === 0) {
                 this.dialog = true;
             }
         }
@@ -92,7 +94,7 @@
                 (this.timeOut as number)--;
                 if (this.timeOut < 0) {
                     window.clearInterval(clock);
-                    this.timeOut = "同意";
+                    this.timeOut = 0;
                 }
             }, 1000);
         }

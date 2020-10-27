@@ -1,7 +1,7 @@
 <template>
     <div class="mx-auto" style="height:100%">
         <Avataaars class="island" :src="avax"/>
-        <v-card class="scroll drop" style="padding-top:2rem;border-radius: 30px 30px 0 0;height:100%;">
+        <v-card class="scroll drop" style="padding-top:2rem;border-radius: 30px 30px 0 0;height:100%;" >
             <v-card-text>
                 <v-form>
                     <v-select
@@ -87,11 +87,11 @@ http://47.103.1.116/?avatarStyle=${this.axa[0]}
 
         private created() {
             this.avaList.forEach((element, i) => {
-                this.axa[i] = element[this.randomNum(0, element.length - 1)];
+                this.axa[i] = element[AvataaarsGenerator.randomNum(0, element.length - 1)];
             });
         }
 
-        private randomNum(minNum: number, maxNum: number) {
+        private static randomNum(minNum: number, maxNum: number) {
             return Math.floor(Math.random() * (maxNum - minNum + 1) + minNum);
         }
     }
