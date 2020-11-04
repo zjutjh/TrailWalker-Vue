@@ -104,20 +104,25 @@ export default class ApplyList extends Vue {
   private async approve() {
     this.confirmSheet = false;
     this.$store.commit("setLoading", true);
-    const res = await postData(API(apiMap.agreeApply), {apply_id: (this.selectedUser as IUser).id});
-    this.$store.commit("setLoading", false);
+    try {
+      const res = await postData(API(apiMap.agreeApply), {apply_id: (this.selectedUser as IUser).id});
 
-    if (res.code === 1) {
-      await this.$store.dispatch("getMyGroup");
-      await this.$store.dispatch("getMyGroupMember");
-      this.confirmSheet = false;
-      this.$store.commit("showSuccessbar", "操作成功");
-    } else {
-      this.$store.commit("showErrorbar", res.data);
+      if (res.code === 1) {
+        await this.$store.dispatch("getMyGroup");
+        await this.$store.dispatch("getMyGroupMember");
+        this.confirmSheet = false;
+        this.$store.commit("showSuccessbar", "操作成功");
+      } else {
+        this.$store.commit("showErrorbar", res.data);
+      }
+      await this.getApplyUserList();
+    } catch {
+      this.$store.commit("showErrorbar", "网络错误");
+    } finally {
+      this.$store.commit("setLoading", false);
+
     }
 
-
-    await this.getApplyUserList();
   }
 
   /**
@@ -126,18 +131,23 @@ export default class ApplyList extends Vue {
   private async refuse() {
     this.confirmSheet = false;
     this.$store.commit("setLoading", true);
-    const res = await postData(API(apiMap.refuseApply), {apply_id: (this.selectedUser as IUser).id});
-    this.$store.commit("setLoading", false);
+    try {
+      const res = await postData(API(apiMap.refuseApply), {apply_id: (this.selectedUser as IUser).id});
 
-    if (res.code === 1) {
-      this.$store.commit("showSuccessbar", "操作成功");
-    } else {
-      this.$store.commit("showErrorbar", res.data);
+      if (res.code === 1) {
+        this.$store.commit("showSuccessbar", "操作成功");
+      } else {
+        this.$store.commit("showErrorbar", res.data);
+
+      }
+
+
+      await this.getApplyUserList();
+    } finally {
+      this.$store.commit("setLoading", false);
 
     }
 
-
-    await this.getApplyUserList();
   }
 
   private mounted() {

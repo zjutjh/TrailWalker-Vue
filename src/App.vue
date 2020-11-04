@@ -2,17 +2,18 @@
   <v-app>
 
     <header-bar></header-bar>
+    <v-snackbar v-model="$store.state.snackbar.isShow" style="text-align: center;padding: 0.5rem" bottom
+                :color="$store.state.snackbar.color">
+      {{ $store.state.snackbar.text }}
+    </v-snackbar>
     <v-main class="content">
-      <v-snackbar v-model="$store.state.snackbar.isShow" bottom :color="$store.state.snackbar.color"
-                  style="margin-bottom: 30vh">
-        {{ $store.state.snackbar.text }}
-        <v-btn color="white" text @click="$store.state.snackbar.isShow = false"> Close</v-btn>
-      </v-snackbar>
-      <transition name="slide-x-transition">
+
+      <v-expand-transition>
         <router-view/>
-      </transition>
+      </v-expand-transition>
     </v-main>
-    <bottom-bar v-if="$store.state.systemInfo.state === 1&&isOriginHei"></bottom-bar>
+
+    <bottom-bar v-if="$store.state.systemInfo.state === 1" v-show="!isRefuse"></bottom-bar>
 
     <v-overlay v-show="$store.state.isLoading" :value="$store.state.isLoading"
                style="z-index: 99999;backdrop-filter: blur(10px)">
@@ -35,11 +36,11 @@ import {API, apiMap} from "@/utils/api/api";
 
 @Component({components: {BottomBar, HeaderBar}})
 export default class App extends Vue {
-  private isOriginHei = true;
-  private documentHeight = document.documentElement.clientHeight;
+  private isRefuse = false;
 
-  private async created() {
+  private async mounted() {
     await this.$store.dispatch("getSystemInfo");
+
     if (this.$store.state.systemInfo.state === -1) {
       await this.$router.replace("/NotStart");
       return;
@@ -50,40 +51,43 @@ export default class App extends Vue {
       const codex = search.split("?")[1].split("&")[0].split("=")[1];
       if (codex === "") {
         window.location.replace(API(apiMap.wxLogin));
-      } else {
-        await this.$store.dispatch("showLoading");
-        const res = await postData(API(apiMap.login), {code: codex});
+        return;
+      }
 
-        if (res.code === 1) {
+      await this.$store.dispatch("showLoading");
+      const res = await postData(API(apiMap.login), {code: codex});
+      switch (res.code) {
+        case 1: {
           await this.$store.dispatch("getMyInfo");
           await this.$store.dispatch("closeLoading");
+
           if (this.$store.state.systemInfo.state === 0) {
             await this.$store.dispatch("getMyGroup");
             await this.$store.dispatch("getMyGroupMember");
             await this.$router.replace("/End");
           }
-
           this.$store.commit("showSuccessbar", "微信登录成功");
-        } else if (res.code === 0) {
+          break;
+        }
+        case -1: {
           window.location.replace(API(apiMap.wxLogin));
-        } else {
+          break;
+        }
+        case -2: {
+          window.location.replace(API(apiMap.wxLogin));
+          break;
+        }
+        case -3: {
+          this.isRefuse = true;
           this.$store.commit("showErrorbar", res.data);
           await this.$store.dispatch("closeLoading");
           await this.$router.replace("/Refuse");
-          return;
+          break;
         }
       }
     } catch {
       window.location.replace(API(apiMap.wxLogin));
     }
-  }
-
-  private mounted() {
-    window.onresize = () => {
-      return (() => {
-        this.isOriginHei = this.documentHeight <= document.documentElement.clientHeight;
-      })();
-    };
   }
 }
 </script>
@@ -91,6 +95,12 @@ export default class App extends Vue {
 h1 {
   margin: 1.5rem;
 }
+
+.v-btn {
+  margin-right: 0.5rem;
+  margin-left: 0.5rem;
+}
+
 .drop {
   background-color: rgba(255, 255, 255, 1);
 }
@@ -108,12 +118,14 @@ h1 {
     background-color: rgba(255, 255, 255, 0) !important;
   }
 }
-#app{
+
+#app {
   background-image: linear-gradient(120deg, #5694dc 0%, #c2e9fb 90%);
   background-size: cover;
   background-repeat: no-repeat;
   background-attachment: fixed;
 }
+
 body {
   text-align: center;
 }
@@ -134,11 +146,11 @@ body {
 }
 
 .v-bottom-sheet {
-  border-radius: 30px 30px 0 0 !important;
+  border-radius: 24px 24px 0 0 !important;
 }
 
 .bottom-sheet {
-  border-radius: 30px 30px 0 0 !important;
+  border-radius: 24px 24px 0 0 !important;
   background-color: transparent !important;
   width: 100%;
 }

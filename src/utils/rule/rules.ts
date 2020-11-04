@@ -81,11 +81,11 @@ class Rx {
 
 const nameRules = [
     (v: string) => !!v || "需要名称",
-    (v: string) => (v && v.length <= 10) || "名称必须小于10个字符",
+    (v: string) => (v && v.length <= 8) || "名称必须小于8个字符",
 ];
 const sloganRules = [
     (v: string) => !!v || "需要口号",
-    (v: string) => (v && v.length <= 50) || "口号必须小于50个字符"
+    (v: string) => (v && v.length <= 15) || "口号必须小于15个字符"
 ];
 const idCardRules = [
     (v: string) => !!v || "需要身份证号",

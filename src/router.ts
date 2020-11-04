@@ -62,6 +62,11 @@ export default new Router({
                     path: "Update",
                     name: "Group",
                     component: () => import(/* webpackChunkName: "about" */ "./views/Group/Update.vue")
+                },
+                {
+                    path: "Match",
+                    name: "Group",
+                    component: () => import(/* webpackChunkName: "about" */ "./views/Group/MatchGroup.vue")
                 }]
         },
         {

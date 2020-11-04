@@ -25,7 +25,7 @@ import router from "@/router";
 
 @Component({
   components: {
-    Avataaars: () => import(/* webpackChunkName: "group" */"@/components/Avataaars.vue")
+    Avataaars: () => import("@/components/Avataaars.vue")
   }
 })
 export default class MyCard extends Vue {

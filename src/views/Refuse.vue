@@ -1,6 +1,6 @@
 <template>
   <div class="flex">
-    <tip-card class="flex-item">请先关注浙江省工业大学精弘网络公众号</tip-card>
+    <tip-card class="flex-item">请在微信中打开并先关注浙江省工业大学精弘网络公众号</tip-card>
   </div>
 </template>
 

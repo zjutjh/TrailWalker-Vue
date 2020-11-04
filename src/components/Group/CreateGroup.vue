@@ -34,11 +34,10 @@ import {apiMap} from "@/utils/api/api";
               thumb-label="always"
           ></v-slider>
           <v-switch
-              v-model="group.allow_random"
+              v-model="group.allow_matching"
               label="允许随机加入"
               class="align-content-center"
-              color="orange"
-              value="orange"
+              color="blue"
           ></v-switch>
         </v-form>
         <div class="text-center">
@@ -87,7 +86,7 @@ export default class CreateGroup extends Vue {
     description: "",
     route_id: 0,
     capacity: 4,
-    allow_random: false
+    allow_matching: false
   };
 
   private valid: boolean = false;
@@ -101,20 +100,28 @@ export default class CreateGroup extends Vue {
   private async createUpdateGroup() {
     const api = this.isUpdate ? apiMap.updateGroup : apiMap.createGroup;
     this.$store.commit("setLoading", true);
-    const res = await postData(API(api), this.group);
-    this.$store.commit("setLoading", false);
+    try {
+      const res = await postData(API(api), this.group);
 
-    if (res.code === 1) {
-      await this.$store.dispatch("getMyInfo");
-      await router.replace("/Group");
-      if (this.isUpdate) {
-        this.$store.commit("showSuccessbar", "修改成功");
+      if (res.code === 1) {
+        await this.$store.dispatch("getMyInfo");
+        await router.replace("/Group");
+        if (this.isUpdate) {
+          this.$store.commit("showSuccessbar", "修改成功");
+        } else {
+          this.$store.commit("showSuccessbar", "创建成功");
+        }
       } else {
-        this.$store.commit("showSuccessbar", "创建成功");
+        this.$store.commit("showErrorbar", res.data);
       }
-    } else {
-      this.$store.commit("showErrorbar", res.data);
+    } catch {
+      this.$store.commit("showErrorbar", "网络错误");
+    } finally {
+
+      this.$store.commit("setLoading", false);
+
     }
+
 
   }
 

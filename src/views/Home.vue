@@ -1,6 +1,9 @@
 <template>
   <div class="flex">
     <my-card class="flex-item mx-auto"></my-card>
+<!--    <current-group-count-card class="flex-item mx-auto"-->
+<!--                              label="报名人数"-->
+<!--                              :value="$store.state.systemInfo.apply_count"></current-group-count-card>-->
     <tip-card class="flex-item mx-auto">欢迎报名精弘毅行</tip-card>
     <v-card class="flex-item mx-auto" elevation="10" max-width="25rem" rounded="xl">
       <v-card-title>特别提醒</v-card-title>
@@ -8,12 +11,7 @@
     </v-card>
 
     <hello-card class="flex-item mx-auto"></hello-card>
-    <current-group-count-card class="flex-item mx-auto"
-                              label="报名组数"
-                              :value="$store.state.systemInfo.group_count"></current-group-count-card>
-    <current-group-count-card class="flex-item mx-auto"
-                              label="报名人数"
-                              :value="$store.state.systemInfo.apply_count"></current-group-count-card>
+
 
   </div>
 </template>

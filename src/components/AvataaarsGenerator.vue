@@ -22,7 +22,7 @@
 
     @Component({
         components: {
-            Avataaars: () => import(/* webpackChunkName: "group" */"@/components/Avataaars.vue")
+            Avataaars: () => import("@/components/Avataaars.vue")
         }
     })
     export default class AvataaarsGenerator extends Vue {
@@ -87,11 +87,11 @@ http://47.103.1.116/?avatarStyle=${this.axa[0]}
 
         private created() {
             this.avaList.forEach((element, i) => {
-                this.axa[i] = element[AvataaarsGenerator.randomNum(0, element.length - 1)];
+                this.axa[i] = element[this.randomNum(0, element.length - 1)];
             });
         }
 
-        private static randomNum(minNum: number, maxNum: number) {
+        private randomNum(minNum: number, maxNum: number) {
             return Math.floor(Math.random() * (maxNum - minNum + 1) + minNum);
         }
     }

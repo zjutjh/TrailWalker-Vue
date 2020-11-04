@@ -15,8 +15,6 @@
             if (this.$store.state.currentUser === null) {
                 await this.$router.replace("/Me/create");
             }
-
-
         }
     }
 </script>

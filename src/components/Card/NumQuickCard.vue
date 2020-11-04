@@ -1,10 +1,10 @@
 <template>
   <v-sheet
+      class="mx-auto"
       :style="getColor()"
       elevation="5"
-      min-height="100"
       min-width="100"
-      max-width="140"
+      max-width="200"
       rounded="xl"
       style="padding: 0.5rem"
   >
@@ -24,10 +24,10 @@ import {Component, Prop, Vue} from "vue-property-decorator";
 @Component({})
 export default class CurrentGroupCountCard extends Vue {
   @Prop({
-    type: String,
-    default: ""
+    type: Number,
+    default: 0
   })
-  private value?: string;
+  private value?: string | number;
 
   @Prop({
     type: String,
@@ -35,7 +35,7 @@ export default class CurrentGroupCountCard extends Vue {
   })
   private label?: string;
 
-  private static getColor() {
+  private getColor() {
     const r = parseInt((Math.random() * 256).toString(), 0);
     const g = parseInt((Math.random() * 256).toString(), 0);
     const b = parseInt((Math.random() * 256).toString(), 0);

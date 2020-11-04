@@ -8,7 +8,11 @@ Vue.use(ErrorPlugin);
 
 Vue.config.productionTip = false;
 
-
+router.beforeEach((to, from, next) => {
+    // @ts-ignore
+    window.history.replaceState(null, null, window.location.href);
+    next();
+});
 new Vue({
     // @ts-ignore
     vuetify,

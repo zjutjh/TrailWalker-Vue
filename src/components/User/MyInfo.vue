@@ -79,7 +79,7 @@
 
     @Component({
         components: {
-            Avataaars: () => import(/* webpackChunkName: "group" */"@/components/Avataaars.vue")
+            Avataaars: () => import("@/components/Avataaars.vue")
         }
     })
     export default class MyInfo extends Vue {

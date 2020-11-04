@@ -1,5 +1,5 @@
 <template>
-  <v-bottom-navigation class="drop"  v-model="bottomNav" shift>
+  <v-bottom-navigation class="drop"  v-model="bottomNav" >
     <v-btn
         class="bottom-btn"
         rounded

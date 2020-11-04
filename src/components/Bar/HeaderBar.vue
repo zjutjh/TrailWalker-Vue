@@ -2,7 +2,7 @@
     <v-app-bar app class="drop">
       <v-toolbar-title class="headline">
         <span>精弘毅行</span>
-        <span class="font-weight-light">@2019</span>
+        <span class="font-weight-light">@2020</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn text href="http://www.jh.zjut.edu.cn/" target="_blank">

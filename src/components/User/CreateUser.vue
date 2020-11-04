@@ -5,7 +5,7 @@
       <Avataaars v-if="user.logo" :src="user.logo"/>
     </v-card-title>
 
-    <v-form ref="form" v-model="valid" >
+    <v-form ref="form" v-model="valid">
 
       <v-expansion-panels multiple popout v-model="ExpansionPanel">
         <v-expansion-panel raised rounded="xl">
@@ -63,7 +63,7 @@
                 v-model="user.identity"
             ></v-select>
           </v-expansion-panel-content>
-        </v-expansion-panel  >
+        </v-expansion-panel>
 
         <v-expansion-panel>
           <v-expansion-panel-header>联系信息</v-expansion-panel-header>
@@ -121,7 +121,7 @@
 
     <v-bottom-sheet v-model="sheet" scrollable>
       <v-sheet class="text-center bottom-sheet scroll">
-        <disclaimer class="text-center" @agree="createOrUpdate" ></disclaimer>
+        <disclaimer class="text-center" @agree="createOrUpdate"></disclaimer>
       </v-sheet>
     </v-bottom-sheet>
     <v-bottom-sheet v-model="sheet2" scrollable>
@@ -214,14 +214,20 @@ export default class CreateUser extends Vue {
     this.sheet = false;
     const api = this.isUpdate ? apiMap.updateUser : apiMap.createUser;
     this.$store.commit("setLoading", true);
-    const res = await postData(API(api), this.user);
-    this.$store.commit("setLoading", false);
-    if (res.code === 1) {
-      await this.$router.replace("/Home");
-      await this.$store.dispatch("getMyInfo");
-      this.$store.commit("showSuccessbar", "创建用户成功");
-    } else {
-      this.$store.commit("showErrorbar", res.data);
+    try {
+      const res = await postData(API(api), this.user);
+
+      if (res.code === 1) {
+        await this.$router.replace("/Home");
+        await this.$store.dispatch("getMyInfo");
+        this.$store.commit("showSuccessbar", "创建用户成功");
+      } else {
+        this.$store.commit("showErrorbar", res.data);
+      }
+    } catch {
+      this.$store.commit("showErrorbar", "网络错误");
+    } finally {
+      this.$store.commit("setLoading", false);
     }
   }
 
@@ -229,8 +235,6 @@ export default class CreateUser extends Vue {
     if (this.user.identity === "学生") {
       this.ExpansionPanel.push(2);
     }
-
-
   }
 
   private showAVE() {

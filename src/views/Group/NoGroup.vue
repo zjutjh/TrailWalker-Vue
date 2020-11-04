@@ -1,9 +1,10 @@
 <template>
   <div class="flex" style="flex-direction: column">
     <create-group class="flex-item"></create-group>
-    <v-btn color="primary" style="margin-left: auto;margin-right: auto" @click="applyRandomTeam">随机匹配</v-btn>
-
     <group-list class="flex-item"></group-list>
+    <v-btn color="primary" style="margin:1rem;margin-left: auto;margin-right: auto" @click="applyRandomGruop()">没有找到心怡的队伍？
+    </v-btn>
+
   </div>
 </template>
 <script lang="ts">
@@ -20,19 +21,9 @@ import {API, apiMap} from "@/utils/api/api";
 })
 export default class NoGroup extends Vue {
 
-  private async applyRandomTeam() {
-    this.$store.commit("setLoading", true);
-    const res = await postData(API(apiMap.doMatchingApply));
-    this.$store.commit("setLoading", false);
+  private async applyRandomGruop() {
 
-    if (res.code === 1) {
-      this.$store.commit("showSuccessbar", "申请中");
-      await this.$store.dispatch("getMyInfo");
-      await this.$router.replace("/Group/Wait");
-    } else {
-      this.$store.commit("showErrorbar", res.data);
-    }
-
+    await this.$router.push("/Group/Match");
   }
 }
 </script>
