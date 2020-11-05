@@ -54,6 +54,14 @@
                           suffix="cm"
                           v-model="user.height"></v-text-field>
             <v-select
+                :items="sex"
+                :rules="[v => !!v || '需要选择性别']"
+                label="性别"
+                prepend-icon="mdi-gender-male-female"
+                solo
+                v-model="user.sex"
+            ></v-select>
+            <v-select
                 :items="identity"
                 :rules="[v => !!v || '需要选择身份']"
                 label="身份"
@@ -173,13 +181,14 @@ export default class CreateUser extends Vue {
     "机械工程学院",
     "人文学院",
     "信息工程学院",
-    "设计艺术学院",
+    "设计与建筑学院",
+    "食品科学与工程学院",
     "计算机科学与技术学院、软件学院",
     "法学院",
     "经济学院",
+    "土木工程学院",
     "马克思主义学院",
-    "建筑工程学院",
-    "政治与公共管理学院",
+    "公共管理学院",
     "生物工程学院",
     "环境学院",
     "国际学院",
@@ -190,6 +199,7 @@ export default class CreateUser extends Vue {
   ];
   private identity = ["学生", "教职工", "校友", "其他"];
   private campus = ["屏峰", "朝晖", "莫干山"];
+  private sex = ["男", "女"];
 
   private sheet: boolean = false;
   private sheet2: boolean = false;

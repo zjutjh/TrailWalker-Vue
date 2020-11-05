@@ -40,51 +40,39 @@ export default new Router({
         {
             path: "/Group",
             name: "Group",
-            component: () => import(/* webpackChunkName: "about" */ "./views/Group.vue"),
-            children: [
-                {
-                    path: "",
-                    name: "Group",
-                    component: () => import(/* webpackChunkName: "about" */ "./views/Group/HaveGroup.vue"),
-                },
-                {
-                    path: "No",
-                    name: "Group",
-                    component: () =>
-                        import(/* webpackChunkName: "about" */ "./views/Group/NoGroup.vue")
-                },
-                {
-                    path: "Wait",
-                    name: "Group",
-                    component: () => import(/* webpackChunkName: "about" */ "./views/Group/WaitJoin.vue")
-                },
-                {
-                    path: "Update",
-                    name: "Group",
-                    component: () => import(/* webpackChunkName: "about" */ "./views/Group/Update.vue")
-                },
-                {
-                    path: "Match",
-                    name: "Group",
-                    component: () => import(/* webpackChunkName: "about" */ "./views/Group/MatchGroup.vue")
-                }]
+            component: () => import(/* webpackChunkName: "about" */ "./views/Group/HaveGroup.vue"),
+        },
+        {
+            path: "/Group/No",
+            name: "Group",
+            component: () =>
+                import(/* webpackChunkName: "about" */ "./views/Group/NoGroup.vue")
+        },
+        {
+            path: "/Group/Wait",
+            name: "Group",
+            component: () => import(/* webpackChunkName: "about" */ "./views/Group/WaitJoin.vue")
+        },
+        {
+            path: "/Group/Update",
+            name: "Group",
+            component: () => import(/* webpackChunkName: "about" */ "./views/Group/Update.vue")
+        },
+        {
+            path: "/Group/Match",
+            name: "Group",
+            component: () => import(/* webpackChunkName: "about" */ "./views/Group/MatchGroup.vue")
+
         },
         {
             path: "/Me",
             name: "Me",
-            component: () => import(/* webpackChunkName: "about" */ "./views/Me.vue"),
-            children: [
-                {
-                    path: "",
-                    name: "Me",
-                    component: () => import(/* webpackChunkName: "about" */ "./components/User/MyInfo.vue"),
-                },
-                {
-                    path: "Create",
-                    name: "Me",
-                    component: () => import(/* webpackChunkName: "about" */ "./components/User/CreateUser.vue")
-                }
-            ]
+            component: () => import("./components/User/MyInfo.vue"),
+        },
+        {
+            path: "/Me/Create",
+            name: "MeCreate",
+            component: () => import("./components/User/CreateUser.vue")
         }
     ]
 });

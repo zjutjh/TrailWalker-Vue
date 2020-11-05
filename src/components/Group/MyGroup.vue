@@ -212,7 +212,7 @@ export default class MyGroup extends Vue {
 
 
       if (res.code === 1) {
-        this.getMyGroup();
+        await this.getMyGroup();
         this.$store.commit("showSuccessbar", "踢人成功");
         this.selectedMember = null;
       } else {
@@ -258,8 +258,7 @@ export default class MyGroup extends Vue {
         this.$store.commit("showErrorbar", res.data);
       } else {
         this.$store.commit("showSuccessbar", "取消队伍报名成功");
-        this.getMyGroup();
-        await this.$router.replace("/Group");
+        await this.getMyGroup();
       }
     } catch {
       this.$store.commit("showErrorbar", "网络错误");
@@ -278,8 +277,7 @@ export default class MyGroup extends Vue {
         this.$store.commit("showErrorbar", res.data);
       } else {
         this.$store.commit("showSuccessbar", "提交成功,请保持关注浙江工业大学精弘网络微信公众号,后期消息将通过公众号推送");
-        this.getMyGroup();
-        await this.$router.replace("/Group");
+        await this.getMyGroup();
       }
     } catch {
       this.$store.commit("showErrorbar", "网络错误");

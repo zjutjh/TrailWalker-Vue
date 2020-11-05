@@ -1,7 +1,8 @@
 <template>
   <div class="mx-auto" style="max-width:350px;">
+    <h1>匹配队伍</h1>
     <v-card raised rounded="xl" style="margin-top: 1rem;padding: 1rem">
-      <h1>匹配队伍</h1>
+
       <v-card-text>
         <v-form ref="form" v-model="valid">
           <v-select
@@ -23,7 +24,7 @@
       </v-card-text>
       <v-list-item>
         <v-list-item-content>
-          <v-list-item-subtitle color="red">更多个性化匹配欢迎大家的提出</v-list-item-subtitle>
+          <v-list-item-subtitle color="red">更多个性化匹配,敬请期待</v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
     </v-card>
@@ -38,7 +39,7 @@ import {API, apiMap} from "@/utils/api/api";
 @Component({})
 export default class MatchGroup extends Vue {
   private info = {};
-  private valid = true;
+  private valid = false;
 
   private async applyRandomTeam() {
     this.$store.commit("setLoading", true);

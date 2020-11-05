@@ -1,5 +1,5 @@
 <template>
-  <div class="mx-auto">
+  <div class="mx-auto" style="max-width: 30rem;">
     <h1>加入队伍</h1>
     <v-text-field max-width="25rem" label="搜索" solo clearable raised rounded v-model="listRequest.query_string"
                   @keydown="query"></v-text-field>

@@ -1,5 +1,5 @@
 <template>
-  <v-bottom-navigation class="drop"  v-model="bottomNav" >
+  <v-bottom-navigation class="drop" v-model="bottomNav">
     <v-btn
         class="bottom-btn"
         rounded
@@ -27,15 +27,34 @@ export default class BottomBar extends Vue {
     {name: "Me", icon: "person"}
   ];
 
-  private tagClicked(e: string) {
-    if (e !== this.$route.name as string) {
-      router.push("/" + e);
+  private async tagClicked(e: string) {
+    if (this.$route.path.substr(1) === e){return;}
+    switch (e) {
+      case "Home": {
+        await router.replace("/Home");
+        break;
+      }
+      case "Group": {
+        await this.$store.dispatch("getMyInfo");
+        if (this.$store.state.currentUser.state <= 1) {
+          await this.$router.push("/Group/No");
+        } else if (this.$store.state.currentUser.state === 2) {
+          await this.$router.push("/Group/Wait");
+        } else {
+          await this.$router.push("/Group");
+        }
+        break;
+      }
+      case "Me": {
+        await router.replace("/Me");
+        break;
+      }
     }
   }
 
   @Watch("$route")
   private getPush() {
-    this.bottomNav = this.$route.name as string;
+    this.bottomNav = this.$route.path.split("/")[1];
   }
 }
 </script>
@@ -44,7 +63,8 @@ export default class BottomBar extends Vue {
   position: sticky;
   z-index: 5;
 }
-.bottom-btn{
-  height: 100%!important;
+
+.bottom-btn {
+  height: 100% !important;
 }
 </style>

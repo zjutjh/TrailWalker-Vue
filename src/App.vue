@@ -22,7 +22,7 @@
           color="primary"
           indeterminate
       ></v-progress-circular>
-      <h1>等待中</h1>
+      <h1>加载中</h1>
     </v-overlay>
   </v-app>
 </template>
@@ -94,6 +94,7 @@ export default class App extends Vue {
 <style>
 h1 {
   margin: 1.5rem;
+  color: white;
 }
 
 .v-btn {

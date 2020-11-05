@@ -30,11 +30,17 @@ import router from "@/router";
 })
 export default class MyCard extends Vue {
   private gotoLogin() {
-    router.replace("/Me");
+    router.replace("/Me/Create");
   }
 
-  private gotoGroup() {
-    router.replace("/Group");
+  private async gotoGroup() {
+    await this.$store.dispatch("getMyInfo");
+    if (this.$store.state.currentUser.state <= 1) {
+      await this.$router.push("/Group/No");
+    } else if (this.$store.state.currentUser.state === 2) {
+      await this.$router.push("/Group/Wait");
+    } else
+      await this.$router.push("/Group");
   }
 }
 </script>
