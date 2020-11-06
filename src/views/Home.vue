@@ -5,12 +5,13 @@
 <!--                              label="报名人数"-->
 <!--                              :value="$store.state.systemInfo.apply_count"></current-group-count-card>-->
     <tip-card class="flex-item mx-auto">欢迎报名精弘毅行</tip-card>
+
+
+    <hello-card class="flex-item mx-auto"></hello-card>
     <v-card class="flex-item mx-auto" elevation="10" max-width="25rem" rounded="xl">
       <v-card-title>特别提醒</v-card-title>
       <v-card-text>请关注浙江工业大学精弘网络微信公众号,队伍编号信息后续发放。请务必关注浙江工业大学精弘网络及时查收出发时间和其它重要通知。</v-card-text>
     </v-card>
-
-    <hello-card class="flex-item mx-auto"></hello-card>
 
 
   </div>

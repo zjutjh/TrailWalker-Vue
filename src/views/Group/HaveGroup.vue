@@ -10,8 +10,8 @@ import {Component, Vue} from "vue-property-decorator";
 
 @Component({
   components: {
-    MyGroup: () => import(/* webpackChunkName: "group" */"@/components/Group/MyGroup.vue"),
-    ApplyList: () => import(/* webpackChunkName: "group" */"@/components/Group/ApplyList.vue"),
+    MyGroup: () => import("@/components/Group/MyGroup.vue"),
+    ApplyList: () => import("@/components/Group/ApplyList.vue"),
   }
 })
 export default class HaveGroup extends Vue {

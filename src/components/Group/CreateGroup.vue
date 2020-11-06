@@ -9,11 +9,11 @@ import {apiMap} from "@/utils/api/api";
       </v-card-title>
       <v-card-text>
         <v-form ref="form" v-model="valid">
-          <v-text-field :rules="nameRules" clearable label="队伍名称" prepend-icon="mdi-account-group" solo
+          <v-text-field :rules="nameRules" clearable label="队伍名称" prepend-icon="mdi-account-group"
                         v-model="group.name"
           ></v-text-field>
           <v-text-field :rules="sloganRules" clearable label="队伍口号" prepend-icon="mdi-bullhorn"
-                        solo v-model="group.description"></v-text-field>
+                        v-model="group.description"></v-text-field>
           <v-select
               :items="$store.state.routes!==[]&&$store.state.routes!=={}?$store.state.routes:['屏峰小和山半程毅行', '屏峰小和山全程毅行', '朝晖京杭大运河毅行']"
               :rules="[v => !!v || '需要选择路线']"
@@ -21,7 +21,7 @@ import {apiMap} from "@/utils/api/api";
               item-value="id"
               label="线路"
               prepend-icon="place"
-              solo
+
               v-model="group.route_id"
           ></v-select>
           <v-slider
@@ -33,12 +33,43 @@ import {apiMap} from "@/utils/api/api";
               tick-size="4"
               thumb-label="always"
           ></v-slider>
-          <v-switch
-              v-model="group.allow_matching"
-              label="允许随机加入"
-              class="align-content-center"
-              color="blue"
-          ></v-switch>
+          <div style="display: flex">
+            <v-switch
+                v-model="group.allow_matching"
+                label="允许随机加入"
+                class="align-content-center"
+                color="blue"
+                style="width: 9rem;"
+            ></v-switch>
+            <v-icon @click="dialog=!dialog">mdi-help-circle</v-icon>
+            <v-dialog
+                v-model="dialog"
+                persistent
+                max-width="290"
+            >
+              <v-card>
+                <v-card-title class="headline">
+                  关于随机匹配
+                </v-card-title>
+                <v-card-text>什么是随机匹配：随机匹配是精弘开发团队为了解决队伍人数而开发的新功能~（开发加鸡腿），选择接受随机匹配可能会使你的队伍获得更多小哥哥小姐姐的加入申请！除了帮忙凑齐报名限制人数之外，也是希望大家可以借这个机会多认识认识新朋友哦~
+                  当然，如果不希望有陌生的人打扰自己的安宁，请不要勾选这个选项哦~
+                  精弘，希望继续伴您五彩生活。
+                </v-card-text>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn
+                      color="green darken-1"
+                      text
+                      @click="dialog = false"
+                  >
+                    好的
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+          </div>
+
+
         </v-form>
         <div class="text-center">
           <v-btn v-if="!isUpdate" :disabled="!valid" @click="createUpdateGroup" color="primary">创建队伍
@@ -57,6 +88,8 @@ import {apiMap} from "@/utils/api/api";
       </v-sheet>
     </v-bottom-sheet>
     <AvataaarsGenerator v-if="!group.logo" v-model="group.logo"></AvataaarsGenerator>
+
+
   </div>
 </template>
 <script lang="ts">
@@ -76,7 +109,7 @@ import {postData} from "@/utils/fetch";
 export default class CreateGroup extends Vue {
 
   private AvataaarsSheet: boolean = false;
-
+  private dialog = false;
   private nameRules = nameRules;
   private sloganRules = sloganRules;
   private group = {

@@ -11,6 +11,7 @@
       <v-expand-transition>
         <router-view/>
       </v-expand-transition>
+
     </v-main>
 
     <bottom-bar v-if="$store.state.systemInfo.state === 1" v-show="!isRefuse"></bottom-bar>
@@ -92,6 +93,8 @@ export default class App extends Vue {
 }
 </script>
 <style>
+
+
 h1 {
   margin: 1.5rem;
   color: white;
@@ -125,6 +128,8 @@ h1 {
   background-size: cover;
   background-repeat: no-repeat;
   background-attachment: fixed;
+  font-family: "webfont" !important;
+  -webkit-font-smoothing: antialiased;
 }
 
 body {

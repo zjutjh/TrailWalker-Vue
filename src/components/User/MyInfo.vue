@@ -1,7 +1,7 @@
 <template>
   <div class="flex-item mx-auto" style="max-width:30rem;">
     <div v-if="$store.state.currentUser">
-      <h1>我</h1>
+      <h1>个人信息</h1>
       <v-card class="text-center" raised rounded="xl">
         <v-card-title>
           <div style="margin-left:auto;margin-right:auto;">
@@ -76,7 +76,7 @@
     </div>
     <v-card v-else raised rounded="xl" max-width="25rem">
       <Avataaars style="margin: 1rem"/>
-      <v-card-title>你还没有报名</v-card-title>
+      <v-card-title style="padding-top: 0;padding-bottom: 0">你还没有报名</v-card-title>
       <v-card-actions>
         <v-card-text>
           <v-btn @click="gotoLogin">点我报名</v-btn>
