@@ -223,8 +223,9 @@ export default class CreateUser extends Vue {
   private async createOrUpdate() {
     this.sheet = false;
     const api = this.isUpdate ? apiMap.updateUser : apiMap.createUser;
-    this.$store.commit("setLoading", true);
+
     try {
+      this.$store.commit("setLoading", true);
       const res = await postData(API(api), this.user);
 
       if (res.code === 1) {

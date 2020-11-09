@@ -40,6 +40,7 @@ export default class App extends Vue {
   private isRefuse = false;
 
   private async mounted() {
+
     await this.$store.dispatch("getSystemInfo");
 
     if (this.$store.state.systemInfo.state === -1) {
@@ -60,13 +61,12 @@ export default class App extends Vue {
       switch (res.code) {
         case 1: {
           await this.$store.dispatch("getMyInfo");
-          await this.$store.dispatch("closeLoading");
-
           if (this.$store.state.systemInfo.state === 0) {
             await this.$store.dispatch("getMyGroup");
             await this.$store.dispatch("getMyGroupMember");
             await this.$router.replace("/End");
           }
+          await this.$store.dispatch("closeLoading");
           this.$store.commit("showSuccessbar", "微信登录成功");
           break;
         }
@@ -86,8 +86,11 @@ export default class App extends Vue {
           break;
         }
       }
+
     } catch {
       window.location.replace(API(apiMap.wxLogin));
+    } finally {
+      this.$store.commit("setLoading", false);
     }
   }
 }

@@ -53,9 +53,7 @@ export default new Vuex.Store({
     actions: {
 
         async getMyInfo(context) {
-            context.commit("setLoading", true);
             const res = await postData(API(apiMap.getUserInfo), null);
-            context.commit("setLoading", false);
             if (res.code === 1) {
                 context.commit("setCurrentUser", res.data);
                 context.commit("setLogin");
@@ -73,9 +71,7 @@ export default new Vuex.Store({
             }
         },
         async getMyGroup(context) {
-            context.commit("setLoading", true);
             const res = await postData(API(apiMap.getMyGroupInfo));
-            context.commit("setLoading", false);
             if (res.code === 1) {
                 context.commit("setCurrentGroup", res.data);
             } else {
@@ -94,9 +90,7 @@ export default new Vuex.Store({
 
         },
         async getSystemInfo(context) {
-            context.commit("setLoading", true);
             const res = await postData(API(apiMap.systemInfo));
-            context.commit("setLoading", false);
             if (res.code === 1) {
                 context.commit("setSystemInfo", res.data);
             }
