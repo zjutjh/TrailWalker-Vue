@@ -115,6 +115,40 @@
             ></v-select>
           </v-expansion-panel-content>
         </v-expansion-panel>
+
+        <v-expansion-panel v-show="user.identity==='校友'" style="text-align: left;">
+          <v-expansion-panel-header>疫情防控信息</v-expansion-panel-header>
+          <v-expansion-panel-content>
+            <h2>我确定不属于以下人员</h2>
+            <p>1、各级疾控机构在流行病学史调查中判定的密切接触者，在解除隔离医学观察前或后未进行检测的人员。</p>
+            <p>2、从国内中高风险区来浙返浙的未能提供到浙前7天内的核酸检测阴性证明的人。</p>
+            <p>3、从国（境）外来浙返浙的未集中隔离医学观察14天且做过核酸及血清检测的。</p>
+            <p>4、曾被诊断为确诊病例、疑似病例和无症状感染者而现已痊愈的人员。</p>
+            <v-checkbox
+                v-model="user.agree"
+                :rules="[v => !!v || '需要同意上述关于疫情防控的要求']"
+                label="我同意上述关于疫情防控的要求"
+            ></v-checkbox>
+            <v-select
+                :items="healthycode"
+                :rules="[v => !!v || '需要选择健康码颜色',(v) => (v==='绿码') || '']"
+                label="杭州健康码"
+                prepend-icon="mdi-account-badge"
+                solo
+                v-model="user.healthycode"
+            ></v-select>
+            <v-file-input
+                solo
+                v-model="user.healthycode_file"
+                show-size
+                :rules="[v => !!v || '需要上传杭州健康码', v=> v.size <512*1024 ||'图片请小于500KB']"
+                accept="image/*"
+                label="上传杭州健康码"
+                @change="fileChange"
+            ></v-file-input>
+
+          </v-expansion-panel-content>
+        </v-expansion-panel>
       </v-expansion-panels>
     </v-form>
 
@@ -167,7 +201,7 @@ import {postData} from "@/utils/fetch";
 export default class CreateUser extends Vue {
 
   private idType = "身份证";
-
+  private healthycode = ["红码", "黄码", "橙色", "绿码"];
   private idTypes = ["身份证", "护照", "台湾", "港澳"];
   private isUpdate = false;
 
@@ -197,7 +231,7 @@ export default class CreateUser extends Vue {
     "外国语学院",
     "管理学院"
   ];
-  private identity = ["学生", "教职工", "校友", "其他"];
+  private identity = ["学生", "教职工", "校友"];
   private campus = ["屏峰", "朝晖", "莫干山"];
   private sex = ["男", "女"];
 
@@ -220,10 +254,17 @@ export default class CreateUser extends Vue {
   private idCard2 = "";
   private user: any = {};
 
+  private fileChange() {
+    const reader = new FileReader();
+    reader.readAsDataURL(this.user.healthycode_file);
+    reader.onload = () => {
+      this.user.healthycode_base64 = reader.result;
+    };
+  }
+
   private async createOrUpdate() {
     this.sheet = false;
     const api = this.isUpdate ? apiMap.updateUser : apiMap.createUser;
-
     try {
       this.$store.commit("setLoading", true);
       const res = await postData(API(api), this.user);

@@ -28,7 +28,9 @@ export default class BottomBar extends Vue {
   ];
 
   private async tagClicked(e: string) {
-    if (this.$route.path.substr(1) === e){return;}
+    if (this.$route.path.substr(1) === e) {
+      return;
+    }
     switch (e) {
       case "Home": {
         await router.replace("/Home");

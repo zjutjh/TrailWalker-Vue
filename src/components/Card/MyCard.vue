@@ -4,11 +4,11 @@
     <v-card-title style="padding-top: 0;padding-bottom: 0">你还没有报名</v-card-title>
     <v-card-actions>
       <v-card-text style="padding-top: 0;padding-bottom: 1rem">
-        <v-btn  @click="gotoLogin">点我报名</v-btn>
+        <v-btn @click="gotoLogin">点我报名</v-btn>
       </v-card-text>
     </v-card-actions>
   </v-card>
-  <v-card v-else max-width="25rem" rounded="xl" raised >
+  <v-card v-else max-width="25rem" rounded="xl" raised>
     <v-card-title>欢迎! {{ $store.state.currentUser.name }}</v-card-title>
     <Avataaars v-if="$store.state.currentUser.logo" :src="$store.state.currentUser.logo" style="margin: 1rem"/>
     <v-card-actions>
@@ -38,8 +38,10 @@ export default class MyCard extends Vue {
       await this.$router.push("/Group/No");
     } else if (this.$store.state.currentUser.state === 2) {
       await this.$router.push("/Group/Wait");
-    } else
+    } else {
       await this.$router.push("/Group");
+    }
+
   }
 }
 </script>

@@ -102,11 +102,10 @@ export default class Disclaimer extends Vue {
   }
 
   private showDialog() {
-    if (this.timeOut === 0&&this.dialog===false) {
+    if (this.timeOut === 0 && this.dialog === false) {
       this.dialog = true;
-    }
-    else{
-      this.dialog =false;
+    } else {
+      this.dialog = false;
     }
   }
 
@@ -122,3 +121,8 @@ export default class Disclaimer extends Vue {
   }
 }
 </script>
+<style scoped>
+p{
+  text-align: left;
+}
+</style>
